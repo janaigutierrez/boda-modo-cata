@@ -1,4 +1,3 @@
-// src/components/sections/CatalinaSection.jsx
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { Heart, Star, Camera } from 'lucide-react'
@@ -65,7 +64,7 @@ const CatalinaSection = ({ data }) => {
                         {/* Stats de Catalina */}
                         <div className="grid grid-cols-2 gap-6">
                             <Card hover={true} gradient={true}>
-                                <div className="text-2xl font-bold text-black">3 años</div>
+                                <div className="text-2xl font-bold text-black">Casi 3 años</div>
                                 <div className="text-gray-500">de pura ternura</div>
                             </Card>
                             <Card hover={true} gradient={true}>
@@ -77,15 +76,10 @@ const CatalinaSection = ({ data }) => {
                                 <div className="text-gray-500">durmiendo al sol</div>
                             </Card>
                             <Card hover={true} gradient={true}>
-                                <div className="text-2xl font-bold text-black">∞</div>
-                                <div className="text-gray-500">amor incondicional</div>
+                                <div className="text-2xl font-bold text-black">MODO CATA</div>
+                                <div className="text-gray-500">diversión sin medidas</div>
                             </Card>
                         </div>
-
-                        <Card className="bg-black text-white">
-                            <p className="text-lg font-medium mb-2">Superpoder especial:</p>
-                            <p className="text-xl">Convertir cualquier día malo en uno perfecto 💫</p>
-                        </Card>
                     </motion.div>
                 </div>
             </div>

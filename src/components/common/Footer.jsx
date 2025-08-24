@@ -78,9 +78,7 @@ const Footer = ({ data }) => {
                             <Heart className="w-4 h-4 text-red-500" />
                             <span>en modo cata</span>
                         </div>
-                        <div className="mt-2 text-sm">
-                            bodaenmodocata.netlify.app ✨
-                        </div>
+
                     </div>
                 </motion.div>
             </div>

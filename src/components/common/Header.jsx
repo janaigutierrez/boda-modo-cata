@@ -33,7 +33,7 @@ const Header = () => {
             <nav className="max-w-7xl mx-auto px-6 py-4">
                 <div className="flex justify-between items-center">
                     {/* Logo */}
-                    <div className="text-2xl font-bold text-black">R & D</div>
+                    <div className="text-2xl font-bold text-black">D | R</div>
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex space-x-8">

@@ -19,7 +19,7 @@ const RSVP = ({ data }) => {
     const onSubmit = (formData) => {
         console.log(formData)
         setIsSubmitted(true)
-        // TODO: Conectar con Google Sheets mañana
+        // TODO: Conectar con Google Sheets
     }
 
     if (isSubmitted) {
@@ -83,7 +83,7 @@ const RSVP = ({ data }) => {
                     </Card>
                 </motion.div>
 
-                {/* FORMULARIO */}
+                {/* FORMULARIO CON CAMPOS NUEVOS */}
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -158,6 +158,54 @@ const RSVP = ({ data }) => {
                                     <option value="pareja">Asistiré con mi pareja (relación estable +1 año)</option>
                                     <option value="consultar">Necesito consultar mi situación</option>
                                 </select>
+                            </div>
+
+                            {/* NUEVOS CAMPOS SEGÚN RAQUEL */}
+                            <div>
+                                <label className="block text-lg font-medium mb-3 text-black">
+                                    ¿Necesitas transporte?
+                                </label>
+                                <div className="space-y-2">
+                                    <select
+                                        {...register('transporte')}
+                                        className="w-full p-4 border-2 border-gray-200 rounded-2xl text-lg focus:border-black focus:outline-none transition-colors"
+                                    >
+                                        <option value="">Selecciona una opción</option>
+                                        <option value="no">No necesito transporte</option>
+                                        <option value="si">Sí, autobús desde Caldes de Montbui</option>
+                                    </select>
+                                    <p className="text-sm text-gray-500">
+                                        Autobús desde Caldes de Montbui - Salida: 17h / Regreso: 04h (preconfirmar)
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="grid md:grid-cols-2 gap-8">
+                                <div>
+                                    <label className="block text-lg font-medium mb-3 text-black">
+                                        ¿Alergias o intolerancias?
+                                    </label>
+                                    <select
+                                        {...register('alergias')}
+                                        className="w-full p-4 border-2 border-gray-200 rounded-2xl text-lg focus:border-black focus:outline-none transition-colors"
+                                    >
+                                        <option value="no">No tengo alergias</option>
+                                        <option value="si">Sí tengo alergias (especificar en mensaje)</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className="block text-lg font-medium mb-3 text-black">
+                                        ¿Necesitas menú veggie?
+                                    </label>
+                                    <select
+                                        {...register('menuVeggie')}
+                                        className="w-full p-4 border-2 border-gray-200 rounded-2xl text-lg focus:border-black focus:outline-none transition-colors"
+                                    >
+                                        <option value="no">Menú tradicional</option>
+                                        <option value="si">Sí, menú vegetariano</option>
+                                    </select>
+                                </div>
                             </div>
 
                             <div>
