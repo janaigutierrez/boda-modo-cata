@@ -101,7 +101,7 @@ const EventDetails = ({ data }) => {
                     transition={{ duration: 1, delay: 0.8 }}
                     className="mt-24 text-center"
                 >
-                    <Card className="bg-black text-white max-w-4xl mx-auto">
+                    <Card className="!bg-black text-white max-w-4xl mx-auto">
                         <div className="text-center">
                             <Clock className="w-12 h-12 mx-auto mb-6" />
                             <p className="text-2xl font-light">

@@ -9,7 +9,8 @@ export const weddingData = {
         month: "Julio",
         year: "2026",
         time: "18:00",
-        full: "17/07/2026"
+        full: "17/07/2026",
+        countdown: "2026-07-17T18:00:00"
     },
     locations: {
         event: {
