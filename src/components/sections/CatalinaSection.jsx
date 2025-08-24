@@ -36,11 +36,7 @@ const CatalinaSection = ({ data }) => {
                         transition={{ duration: 1, delay: 0.3 }}
                         className="relative"
                     >
-                        <ImagePlaceholder
-                            size="large"
-                            type="catalina"
-                            className="mx-auto"
-                        />
+                        <img src="/images/cata-main.jpg" alt="Cata" className="w-96 h-96 object-cover border-2 border-gray-200" />
                     </motion.div>
 
                     {/* Info de Catalina */}

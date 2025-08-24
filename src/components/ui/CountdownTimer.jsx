@@ -1,7 +1,6 @@
 // src/components/ui/CountdownTimer.jsx
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import Card from './Card'
 
 const CountdownTimer = ({ targetDate }) => {
     const [timeLeft, setTimeLeft] = useState({
@@ -12,53 +11,54 @@ const CountdownTimer = ({ targetDate }) => {
     })
 
     useEffect(() => {
-        const timer = setInterval(() => {
+        const calculateTimeLeft = () => {
+            const target = new Date(targetDate).getTime()
             const now = new Date().getTime()
-            const distance = new Date(targetDate).getTime() - now
+            const difference = target - now
 
-            if (distance > 0) {
-                setTimeLeft({
-                    days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-                    hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-                    minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-                    seconds: Math.floor((distance % (1000 * 60)) / 1000)
-                })
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24))
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000)
+
+                setTimeLeft({ days, hours, minutes, seconds })
+            } else {
+                setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 })
             }
-        }, 1000)
+        }
+
+        // Calcular inmediatamente
+        calculateTimeLeft()
+
+        // Actualizar cada segundo
+        const timer = setInterval(calculateTimeLeft, 1000)
 
         return () => clearInterval(timer)
     }, [targetDate])
 
+    const timeUnits = [
+        { label: 'Días', value: timeLeft.days },
+        { label: 'Horas', value: timeLeft.hours },
+        { label: 'Minutos', value: timeLeft.minutes },
+        { label: 'Segundos', value: timeLeft.seconds }
+    ]
+
     return (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
-            {[
-                { label: 'Días', value: timeLeft.days },
-                { label: 'Horas', value: timeLeft.hours },
-                { label: 'Minutos', value: timeLeft.minutes },
-                { label: 'Segundos', value: timeLeft.seconds }
-            ].map((item, index) => (
-                <motion.div
-                    key={item.label}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                    <Card hover={true} gradient={true} className="text-center">
-                        <motion.div
-                            key={item.value} // Re-render on value change
-                            initial={{ scale: 1.2 }}
-                            animate={{ scale: 1 }}
-                            transition={{ duration: 0.3 }}
-                            className="text-4xl font-bold text-black mb-2"
-                        >
-                            {item.value}
-                        </motion.div>
-                        <div className="text-sm text-gray-500 uppercase tracking-wide">
-                            {item.label}
-                        </div>
-                    </Card>
-                </motion.div>
-            ))}
+        <div className="flex flex-col items-center space-y-4">
+            <p className="text-lg text-gray-600 font-mono">Nos vemos en...</p>
+            <div className="bg-black text-white px-8 py-4 border-2 border-black font-mono text-2xl tracking-wider">
+                {timeLeft.days.toString().padStart(2, '0')}:
+                {timeLeft.hours.toString().padStart(2, '0')}:
+                {timeLeft.minutes.toString().padStart(2, '0')}:
+                {timeLeft.seconds.toString().padStart(2, '0')}
+            </div>
+            <div className="flex justify-center space-x-8 text-sm text-gray-500 font-mono">
+                <span>DÍAS</span>
+                <span>HRS</span>
+                <span>MIN</span>
+                <span>SEG</span>
+            </div>
         </div>
     )
 }

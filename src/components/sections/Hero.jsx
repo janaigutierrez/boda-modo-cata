@@ -77,13 +77,7 @@ const Hero = ({ data }) => {
                     transition={{ duration: 1, delay: 1.2 }}
                     className="mt-16 space-y-6"
                 >
-                    <Button
-                        variant="primary"
-                        onClick={scrollToRSVP}
-                        icon={ArrowDown}
-                    >
-                        Confirmar Asistencia
-                    </Button>
+
 
                     <p className="text-sm text-gray-400 max-w-md mx-auto">
                         Una celebración íntima donde cada invitado es especial para nosotros

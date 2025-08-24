@@ -98,7 +98,7 @@ const RSVP = ({ data }) => {
                                     </label>
                                     <input
                                         {...register('nombre', { required: 'Este campo es requerido' })}
-                                        className="w-full p-4 border-2 border-gray-200 rounded-2xl text-lg focus:border-black focus:outline-none transition-colors"
+                                        className="w-full p-4 border-2 border-gray-200 text-lg focus:border-black focus:outline-none transition-colors"
                                         placeholder="Tu nombre completo"
                                     />
                                     {errors.nombre && (
@@ -119,7 +119,7 @@ const RSVP = ({ data }) => {
                                                 message: 'Email no válido'
                                             }
                                         })}
-                                        className="w-full p-4 border-2 border-gray-200 rounded-2xl text-lg focus:border-black focus:outline-none transition-colors"
+                                        className="w-full p-4 border-2 border-gray-200 text-lg focus:border-black focus:outline-none transition-colors"
                                         placeholder="tu@email.com"
                                     />
                                     {errors.email && (
@@ -134,7 +134,7 @@ const RSVP = ({ data }) => {
                                 </label>
                                 <select
                                     {...register('asistencia', { required: 'Por favor selecciona una opción' })}
-                                    className="w-full p-4 border-2 border-gray-200 rounded-2xl text-lg focus:border-black focus:outline-none transition-colors"
+                                    className="w-full p-4 border-2 border-gray-200 text-lg focus:border-black focus:outline-none transition-colors"
                                 >
                                     <option value="">Selecciona una opción</option>
                                     <option value="si">¡Sí, estaré ahí! 🎉</option>
@@ -151,7 +151,7 @@ const RSVP = ({ data }) => {
                                 </label>
                                 <select
                                     {...register('acompanante')}
-                                    className="w-full p-4 border-2 border-gray-200 rounded-2xl text-lg focus:border-black focus:outline-none transition-colors"
+                                    className="w-full p-4 border-2 border-gray-200 text-lg focus:border-black focus:outline-none transition-colors"
                                 >
                                     <option value="">Selecciona una opción</option>
                                     <option value="solo">Asistiré solo/a</option>
@@ -168,7 +168,7 @@ const RSVP = ({ data }) => {
                                 <div className="space-y-2">
                                     <select
                                         {...register('transporte')}
-                                        className="w-full p-4 border-2 border-gray-200 rounded-2xl text-lg focus:border-black focus:outline-none transition-colors"
+                                        className="w-full p-4 border-2 border-gray-200 text-lg focus:border-black focus:outline-none transition-colors"
                                     >
                                         <option value="">Selecciona una opción</option>
                                         <option value="no">No necesito transporte</option>
@@ -187,7 +187,7 @@ const RSVP = ({ data }) => {
                                     </label>
                                     <select
                                         {...register('alergias')}
-                                        className="w-full p-4 border-2 border-gray-200 rounded-2xl text-lg focus:border-black focus:outline-none transition-colors"
+                                        className="w-full p-4 border-2 border-gray-200 text-lg focus:border-black focus:outline-none transition-colors"
                                     >
                                         <option value="no">No tengo alergias</option>
                                         <option value="si">Sí tengo alergias (especificar en mensaje)</option>
@@ -200,7 +200,7 @@ const RSVP = ({ data }) => {
                                     </label>
                                     <select
                                         {...register('menuVeggie')}
-                                        className="w-full p-4 border-2 border-gray-200 rounded-2xl text-lg focus:border-black focus:outline-none transition-colors"
+                                        className="w-full p-4 border-2 border-gray-200 text-lg focus:border-black focus:outline-none transition-colors"
                                     >
                                         <option value="no">Menú tradicional</option>
                                         <option value="si">Sí, menú vegetariano</option>
@@ -215,16 +215,16 @@ const RSVP = ({ data }) => {
                                 <textarea
                                     {...register('mensaje')}
                                     rows={4}
-                                    className="w-full p-4 border-2 border-gray-200 rounded-2xl text-lg focus:border-black focus:outline-none transition-colors resize-none"
+                                    className="w-full p-4 border-2 border-gray-200 text-lg focus:border-black focus:outline-none transition-colors resize-none"
                                     placeholder="Deja aquí tus mejores deseos..."
                                 />
                             </div>
 
-                            <div className="text-center pt-4">
+                            <div className="text-center pt-4 object-center">
                                 <Button
                                     variant="primary"
                                     icon={Send}
-                                    className="text-xl px-16"
+                                    className="text-xl px-16 object-center"
                                 >
                                     Confirmar Asistencia
                                 </Button>
