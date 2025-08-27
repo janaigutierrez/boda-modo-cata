@@ -157,8 +157,8 @@ const OurStory = ({ data }) => {
                                 <div>
                                     <div
                                         style={{
-                                            fontFamily: "'Sacramento', cursive",
-                                            fontSize: "1.4rem"
+                                            fontFamily: "Brittany",
+                                            fontSize: "1.5rem"
                                         }}
                                     >
                                         {milestone.year}
@@ -166,7 +166,7 @@ const OurStory = ({ data }) => {
                                     <h3
                                         style={{
                                             fontFamily: "'JetBrains Mono', monospace",
-                                            fontSize: "1.5rem",
+                                            fontSize: "1.2rem",
                                         }}
                                     >
                                         {milestone.title}

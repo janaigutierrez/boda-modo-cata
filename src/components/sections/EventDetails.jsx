@@ -52,9 +52,7 @@ const EventDetails = ({ data }) => {
                                         {data?.locations.event.address}
                                     </div>
                                 </div>
-                                <p className="text-gray-600 leading-relaxed">
-                                    {data?.locations.event.description}
-                                </p>
+
                             </div>
                         </Card>
                     </motion.div>

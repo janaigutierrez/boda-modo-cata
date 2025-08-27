@@ -57,15 +57,13 @@ const Hero = ({ data }) => {
                 >
                     <div className="flex items-center justify-center space-x-4 text-2xl text-gray-600">
                         <span>{data?.date.day}</span>
-                        <span>/</span>
+                        <span>|</span>
                         <span>{data?.date.month}</span>
-                        <span>/</span>
+                        <span>|</span>
                         <span>{data?.date.year}</span>
                     </div>
 
-                    <p className="text-xl text-gray-500 font-light">
-                        {data?.messages.heroSubtitle}
-                    </p>
+
                 </motion.div>
                 <motion.div className="my-16">
                     <h3 className="text-5xl font-light text-gray-600 mb-8">Nos vemos en...</h3>

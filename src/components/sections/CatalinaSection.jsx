@@ -21,9 +21,10 @@ const CatalinaSection = ({ data }) => {
                 >
                     <h2 className="text-6xl font-light mb-6">Conoce a Catalina</h2>
                     <div className="flex justify-center space-x-4 text-4xl">
-                        <span>🐕</span>
                         <Heart className="w-8 h-8 text-red-500" />
-                        <Star className="w-8 h-8 text-yellow-500" />
+                        <Heart className="w-8 h-8 text-red-500" />
+                        <Heart className="w-8 h-8 text-red-500" />
+
                     </div>
                 </motion.div>
 
