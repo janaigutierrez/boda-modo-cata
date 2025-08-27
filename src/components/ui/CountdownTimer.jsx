@@ -46,7 +46,6 @@ const CountdownTimer = ({ targetDate }) => {
 
     return (
         <div className="flex flex-col items-center space-y-4">
-            <p className="text-lg text-gray-600 font-mono">Nos vemos en...</p>
             <div className="bg-black text-white px-8 py-4 border-2 border-black font-mono text-2xl tracking-wider">
                 {timeLeft.days.toString().padStart(2, '0')}:
                 {timeLeft.hours.toString().padStart(2, '0')}:

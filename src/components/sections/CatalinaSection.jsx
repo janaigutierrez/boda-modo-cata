@@ -19,8 +19,7 @@ const CatalinaSection = ({ data }) => {
                     transition={{ duration: 1 }}
                     className="text-center mb-20"
                 >
-                    <h2 className="text-6xl font-light mb-6">Conoce a</h2>
-                    <h2 className="text-8xl font-bold text-black mb-8">{data?.couple.dog}</h2>
+                    <h2 className="text-6xl font-light mb-6">Conoce a Catalina</h2>
                     <div className="flex justify-center space-x-4 text-4xl">
                         <span>🐕</span>
                         <Heart className="w-8 h-8 text-red-500" />
@@ -47,7 +46,7 @@ const CatalinaSection = ({ data }) => {
                         className="space-y-8"
                     >
                         <div>
-                            <h3 className="text-4xl font-light mb-6 text-black">
+                            <h3 className="text-5xl font-light mb-6 text-black">
                                 La tercera integrante de nuestra familia
                             </h3>
                             <p className="text-xl text-gray-600 leading-relaxed">

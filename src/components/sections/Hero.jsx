@@ -42,9 +42,9 @@ const Hero = ({ data }) => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1.2, ease: "easeOut" }}
                 >
-                    <h1 className="text-8xl md:text-9xl font-light tracking-wide mb-8 text-black">
-                        {data?.couple.groom}<br />
-                        <span className="text-6xl md:text-7xl font-handwritten text-gray-500">y</span><br />
+                    <h1 className="text-6xl md:text-7xl font-light tracking-wide mb-8 text-black">
+                        {data?.couple.groom}{" "}
+                        <span className="text-6xl md:text-7xl font-handwritten text-gray-500">y</span>{" "}
                         {data?.couple.bride}
                     </h1>
                 </motion.div>
@@ -57,9 +57,9 @@ const Hero = ({ data }) => {
                 >
                     <div className="flex items-center justify-center space-x-4 text-2xl text-gray-600">
                         <span>{data?.date.day}</span>
-                        <span>•</span>
+                        <span>/</span>
                         <span>{data?.date.month}</span>
-                        <span>•</span>
+                        <span>/</span>
                         <span>{data?.date.year}</span>
                     </div>
 
@@ -68,7 +68,7 @@ const Hero = ({ data }) => {
                     </p>
                 </motion.div>
                 <motion.div className="my-16">
-                    <h3 className="text-2xl font-light text-gray-600 mb-8">Faltan solo...</h3>
+                    <h3 className="text-5xl font-light text-gray-600 mb-8">Nos vemos en...</h3>
                     <CountdownTimer targetDate={data?.date.countdown} />
                 </motion.div>
                 <motion.div

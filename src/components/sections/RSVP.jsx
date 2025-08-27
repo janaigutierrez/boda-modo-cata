@@ -85,21 +85,7 @@ const RSVP = ({ data }) => {
                     </div>
                 </motion.div>
 
-                {/* TEXTO DIPLOMÁTICO */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={inView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 1, delay: 0.3 }}
-                    className="mb-12"
-                >
-                    <Card className="border-l-4 border-black">
-                        <p className="text-lg text-gray-700 italic leading-relaxed text-center">
-                            {data?.messages.rsvpDiplomatic}
-                            <br />
-                            <span className="font-medium text-black">¡Gracias por entenderlo!</span>
-                        </p>
-                    </Card>
-                </motion.div>
+
 
                 {/* FORMULARIO */}
                 <motion.div

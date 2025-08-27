@@ -20,7 +20,7 @@ const EventDetails = ({ data }) => {
                     transition={{ duration: 1 }}
                     className="text-center mb-24"
                 >
-                    <h2 className="text-7xl font-light mb-8 text-black">El gran día</h2>
+                    <h2 className="text-7xl font-light mb-8 text-black">El gran dia</h2>
                     <div className="w-24 h-1 bg-black mx-auto"></div>
                 </motion.div>
 
@@ -40,7 +40,7 @@ const EventDetails = ({ data }) => {
 
                             {/* Contenido */}
                             <div className="space-y-4">
-                                <h3 className="text-3xl font-bold text-black">Ceremonia y Celebración</h3>
+                                <h3 className="text-4xl font-bold text-black">Ceremonia y Banquete</h3>
                                 <div className="text-xl font-medium text-gray-600">
                                     {data?.locations.event.time}
                                 </div>
@@ -73,7 +73,7 @@ const EventDetails = ({ data }) => {
 
                             {/* Contenido */}
                             <div className="space-y-4">
-                                <h3 className="text-3xl font-bold text-black">Transporte</h3>
+                                <h3 className="text-4xl font-bold text-black">Transporte</h3>
                                 <div className="text-xl font-medium text-gray-600">
                                     Autobús disponible
                                 </div>
