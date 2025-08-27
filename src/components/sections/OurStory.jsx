@@ -15,7 +15,7 @@ const OurStory = ({ data }) => {
             year: "2020",
             title: "Nos conocimos",
             description: "El destino nos juntó y supimos que éramos el uno para el otro.",
-            icon: "💫"
+            icon: "/images/bird.svg"
         },
         {
             year: "2022",
@@ -145,7 +145,19 @@ const OurStory = ({ data }) => {
                                 className="flex items-start space-x-4"
                             >
                                 <div className="bg-black text-white w-16 h-16 border-2 border-black flex items-center justify-center text-2xl flex-shrink-0">
-                                    {milestone.icon}
+                                    {typeof milestone.icon === 'string' && /\/images\/.+\.(png|jpe?g|gif|svg|webp)$/i.test(milestone.icon) ? (
+                                        <img
+                                            src={milestone.icon}
+                                            alt={milestone.title}
+                                            className="w-full h-full object-cover"
+                                            onError={(e) => {
+                                                e.target.style.display = 'none'
+                                                e.target.parentElement.textContent = '❔'
+                                            }}
+                                        />
+                                    ) : (
+                                        milestone.icon
+                                    )}
                                 </div>
                                 <div>
                                     <div className="text-sm text-gray-500 font-mono">{milestone.year}</div>
