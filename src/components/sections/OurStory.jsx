@@ -14,30 +14,30 @@ const OurStory = ({ data }) => {
         {
             year: "2018",
             title: "Nos conocimos",
-            icon: ""
+            icon: "/images/bird.png"
         },
         {
             year: "2021",
             title: "El destino nos une de nuevo",
-            icon: ""
+            icon: "/images/heart.png"
 
         },
         {
             year: "2023",
             title: "Llega Cata",
-            icon: ""
+            icon: "/images/bond.png"
 
         },
         {
             year: "2024",
             title: "La Propuesta",
-            icon: ""
+            icon: "/images/ring.png"
 
         },
         {
             year: "2026",
             title: "¡Nos casamos!",
-            icon: ""
+            icon: "/images/rings.png"
 
         }
     ]
@@ -149,13 +149,16 @@ const OurStory = ({ data }) => {
                                 className="flex items-start space-x-4"
                             >
                                 <div className=" w-16 h-16 border-2 border-black flex items-center justify-center text-2xl flex-shrink-0">
-                                    {milestone.icon}
-                                </div>
+                                    <img
+                                        src={milestone.icon}
+                                        alt={`Icon for ${milestone.title}`}
+                                        className="w-full h-full object-contain object-center"
+                                    />                                </div>
                                 <div>
                                     <div
                                         style={{
-                                            fontFamily: "Hurricane",
-                                            fontSize: "1.5rem"
+                                            fontFamily: "'Sacramento', cursive",
+                                            fontSize: "1.4rem"
                                         }}
                                     >
                                         {milestone.year}
