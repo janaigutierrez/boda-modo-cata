@@ -44,7 +44,7 @@ const Hero = ({ data }) => {
                 >
                     <h1 className="text-8xl md:text-9xl font-light tracking-wide mb-8 text-black">
                         {data?.couple.groom}<br />
-                        <span className="text-6xl md:text-7xl text-gray-500">y</span><br />
+                        <span className="text-6xl md:text-7xl font-handwritten text-gray-500">y</span><br />
                         {data?.couple.bride}
                     </h1>
                 </motion.div>
