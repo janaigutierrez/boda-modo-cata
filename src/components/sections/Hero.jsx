@@ -11,10 +11,13 @@ const Hero = ({ data }) => {
     }
 
     return (
+
         <section className="min-h-screen bg-white flex items-center justify-center relative overflow-hidden">
+            <div style={{ marginTop: '100px' }}></div>
+
             {/* Fondo con elementos flotantes */}
             <div className="absolute inset-0">
-                {[...Array(6)].map((_, i) => (
+                {[...Array(600)].map((_, i) => (
                     <motion.div
                         key={i}
                         className="absolute w-2 h-2 bg-black/10 rounded-full"
@@ -42,9 +45,9 @@ const Hero = ({ data }) => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1.2, ease: "easeOut" }}
                 >
-                    <h1 className="text-6xl md:text-7xl font-light tracking-wide mb-8 text-black">
+                    <h1 className="text-6xl md:text-6xl font-light tracking-wide mt-12 mb-8 text-black">
                         {data?.couple.groom}{" "}
-                        <span className="text-6xl md:text-7xl font-handwritten text-gray-500">y</span>{" "}
+                        <span className="text-6xl md:text-6xl font-handwritten text-gray-500">y</span>{" "}
                         {data?.couple.bride}
                     </h1>
                 </motion.div>
