@@ -21,23 +21,28 @@ const RSVP = ({ data }) => {
         setIsSubmitting(true)
 
         try {
-            // Construïm el FormData amb els entry.xxxxx del Google Form
-            const body = new FormData()
-            body.append("entry.514764643", formData.nombre)
-            body.append("entry.1325579506", formData.email)
-            body.append("entry.1842802559", formData.asistencia)
-            body.append("entry.18465505", formData.acompanante)
-            body.append("entry.954168348", formData.transporte)
-            body.append("entry.2077565567", formData.alergias)
-            body.append("entry.121257817", formData.menuVeggie)
-            body.append("entry.2028635582", formData.mensaje)
+            // Usar URLSearchParams en lugar de FormData
+            const body = new URLSearchParams()
+            body.append("entry.514764643", formData.nombre || "")
+            body.append("entry.1325579506", formData.email || "")
+            body.append("entry.1842802559", formData.asistencia || "")
+            body.append("entry.18465505", formData.acompanante || "")
+            body.append("entry.954168348", formData.transporte || "")
+            body.append("entry.2077565567", formData.alergias || "")
+            body.append("entry.121257817", formData.menuVeggie || "")
+            body.append("entry.2028635582", formData.mensaje || "")
+
+            console.log('Enviando datos:', formData) // Para debugging
 
             await fetch(
                 "https://docs.google.com/forms/d/e/1FAIpQLScgGg5y7jcQ_i7i9IRRWw9VSudOShweyCgOL64z3G862CrMtw/formResponse",
                 {
                     method: "POST",
-                    body,
-                    mode: "no-cors", // imprescindible per evitar errors de CORS
+                    body: body,
+                    mode: "no-cors",
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    }
                 }
             )
 
@@ -61,11 +66,11 @@ const RSVP = ({ data }) => {
                         transition={{ duration: 0.5 }}
                     >
                         <CheckCircle className="w-24 h-24 text-green-500 mx-auto mb-8" />
-                        <h2 className="text-5xl font-light mb-6">¡Muchas gracias!</h2>
+                        <h2 className="text-5xl font-light mb-6">¡Gracias!</h2>
                         <p className="text-xl text-gray-600">
                             Hemos recibido tu confirmación. Te enviaremos todos los detalles por email.
                         </p>
-                        <div className="mt-8 text-center">
+                        <div className="mt-8">
                             <Button
                                 variant="secondary"
                                 onClick={() => setIsSubmitted(false)}

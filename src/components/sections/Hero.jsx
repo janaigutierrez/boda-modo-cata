@@ -17,7 +17,7 @@ const Hero = ({ data }) => {
 
             {/* Fondo con elementos flotantes */}
             <div className="absolute inset-0">
-                {[...Array(600)].map((_, i) => (
+                {[...Array(6)].map((_, i) => (
                     <motion.div
                         key={i}
                         className="absolute w-2 h-2 bg-black/10 rounded-full"

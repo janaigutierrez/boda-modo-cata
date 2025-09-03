@@ -28,7 +28,7 @@ export const weddingData = {
     contact: {
         email: "raqueldani2025@gmail.com",
         instagram: "@raqueldani2025",
-        hashtag: "#DanielRaquelCata"
+        hashtag: "#bodaenmodocata"
     },
     messages: {
         heroSubtitle: "Celebramos nuestro amor junto a Cata",
