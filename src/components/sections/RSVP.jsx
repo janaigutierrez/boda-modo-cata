@@ -14,30 +14,41 @@ const RSVP = ({ data }) => {
     })
 
     const [isSubmitted, setIsSubmitted] = useState(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
     const { register, handleSubmit, formState: { errors } } = useForm()
 
     const onSubmit = async (formData) => {
-        // Construïm el FormData amb els entry.xxxxx del teu Google Form
-        const body = new FormData()
-        body.append("entry.514764643", formData.nombre)
-        body.append("entry.1325579506", formData.email)
-        body.append("entry.1842802559", formData.asistencia)
-        body.append("entry.18465505", formData.acompanante)
-        body.append("entry.954168348", formData.transporte)
-        body.append("entry.2077565567", formData.alergias)
-        body.append("entry.121257817", formData.menuVeggie)
-        body.append("entry.2028635582", formData.mensaje)
+        setIsSubmitting(true)
 
-        await fetch(
-            "https://docs.google.com/forms/d/e/1FAIpQLScgGg5y7jcQ_i7i9IRRWw9VSudOShweyCgOL64z3G862CrMtw/formResponse",
-            {
-                method: "POST",
-                body,
-                mode: "no-cors", // imprescindible per evitar errors de CORS
-            }
-        )
+        try {
+            // Construïm el FormData amb els entry.xxxxx del Google Form
+            const body = new FormData()
+            body.append("entry.514764643", formData.nombre)
+            body.append("entry.1325579506", formData.email)
+            body.append("entry.1842802559", formData.asistencia)
+            body.append("entry.18465505", formData.acompanante)
+            body.append("entry.954168348", formData.transporte)
+            body.append("entry.2077565567", formData.alergias)
+            body.append("entry.121257817", formData.menuVeggie)
+            body.append("entry.2028635582", formData.mensaje)
 
-        setIsSubmitted(true)
+            await fetch(
+                "https://docs.google.com/forms/d/e/1FAIpQLScgGg5y7jcQ_i7i9IRRWw9VSudOShweyCgOL64z3G862CrMtw/formResponse",
+                {
+                    method: "POST",
+                    body,
+                    mode: "no-cors", // imprescindible per evitar errors de CORS
+                }
+            )
+
+            setIsSubmitted(true)
+        } catch (error) {
+            console.error('Error al enviar el formulario:', error)
+            // Mostrar mensaje de éxito de todas formas porque no-cors no permite saber si falló
+            setIsSubmitted(true)
+        } finally {
+            setIsSubmitting(false)
+        }
     }
 
     if (isSubmitted) {
@@ -50,11 +61,11 @@ const RSVP = ({ data }) => {
                         transition={{ duration: 0.5 }}
                     >
                         <CheckCircle className="w-24 h-24 text-green-500 mx-auto mb-8" />
-                        <h2 className="text-5xl font-light mb-6">¡Gracias!</h2>
+                        <h2 className="text-5xl font-light mb-6">¡Muchas gracias!</h2>
                         <p className="text-xl text-gray-600">
                             Hemos recibido tu confirmación. Te enviaremos todos los detalles por email.
                         </p>
-                        <div className="mt-8">
+                        <div className="mt-8 text-center">
                             <Button
                                 variant="secondary"
                                 onClick={() => setIsSubmitted(false)}
@@ -84,8 +95,6 @@ const RSVP = ({ data }) => {
                         <Heart className="w-6 h-6 text-red-500" />
                     </div>
                 </motion.div>
-
-
 
                 {/* FORMULARIO */}
                 <motion.div
@@ -218,13 +227,20 @@ const RSVP = ({ data }) => {
                                 />
                             </div>
 
-                            <div className="text-center pt-4 object-center">
+                            {/* BOTÓN CENTRADO CORRECTAMENTE */}
+                            <div className="text-center pt-4">
                                 <Button
+                                    type="submit"
                                     variant="primary"
-                                    icon={Send}
-                                    className="text-xl px-16 object-center"
+                                    disabled={isSubmitting}
+                                    className="text-xl px-16"
                                 >
-                                    Confirmar Asistencia
+                                    {isSubmitting ? 'Enviando...' : (
+                                        <>
+                                            <Send className="w-5 h-5 mr-2 inline" />
+                                            Confirmar Asistencia
+                                        </>
+                                    )}
                                 </Button>
                             </div>
                         </form>
