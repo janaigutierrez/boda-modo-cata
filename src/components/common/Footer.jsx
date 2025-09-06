@@ -32,14 +32,7 @@ const Footer = ({ data }) => {
                     {/* Social Links - ESTILO ANGULAR */}
                     <div className="flex justify-center space-x-6 mb-12">
                         <motion.a
-                            href={`https://instagram.com/${data?.contact.instagram?.replace('@', '') || 'raqueldani2025'}`}
-                            whileHover={{ scale: 1.1, y: -2 }}
-                            className="bg-white/10 p-4 border border-white/20 hover:bg-white hover:text-black transition-all"
-                        >
-                            <Instagram className="w-6 h-6" />
-                        </motion.a>
-                        <motion.a
-                            href={`mailto:${data?.contact.email || 'raqueldani2025@gmail.com'}`}
+                            href={`mailto:${data?.contact.email || 'bodaenmodocata@gmail.com'}`}
                             whileHover={{ scale: 1.1, y: -2 }}
                             className="bg-white/10 p-4 border border-white/20 hover:bg-white hover:text-black transition-all"
                         >

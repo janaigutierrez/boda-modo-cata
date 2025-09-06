@@ -208,14 +208,14 @@ const RSVP = ({ data }) => {
 
                                 <div>
                                     <label className="block text-lg font-medium mb-3 text-black">
-                                        ¿Necesitas menú veggie?
+                                        ¿Necesitas menú vegano?
                                     </label>
                                     <select
                                         {...register('menuVeggie')}
                                         className="w-full p-4 border-2 border-gray-200 text-lg focus:border-black focus:outline-none transition-colors"
                                     >
                                         <option value="No">Menú tradicional</option>
-                                        <option value="Si">Sí, menú vegetariano</option>
+                                        <option value="Si">Sí, menú vegano</option>
                                     </select>
                                 </div>
                             </div>
@@ -232,7 +232,7 @@ const RSVP = ({ data }) => {
                                 />
                             </div>
 
-                            {/* BOTÓN CENTRADO CORRECTAMENTE */}
+                            {/* BOTÓN */}
                             <div className="text-center pt-4">
                                 <Button
                                     type="submit"

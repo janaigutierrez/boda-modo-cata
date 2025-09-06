@@ -26,7 +26,7 @@ export const weddingData = {
         }
     },
     contact: {
-        email: "raqueldani2025@gmail.com",
+        email: "bodaenmodocata@gmail.com",
         instagram: "@raqueldani2025",
         hashtag: "#bodaenmodocata"
     },

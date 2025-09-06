@@ -1,4 +1,3 @@
-// src/components/common/Header.jsx - CON LOGO Y ESTILOS ANGULARES
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
@@ -52,7 +51,7 @@ const Header = () => {
                             { name: 'Inicio', id: 'hero' },
                             { name: 'Historia', id: 'story' },
                             { name: 'Detalles', id: 'detalles' },
-                            { name: 'RSVP', id: 'rsvp' }
+                            { name: 'Confirma tu asistencia', id: 'rsvp' }
                         ].map((item) => (
                             <button
                                 key={item.id}

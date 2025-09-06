@@ -4,14 +4,12 @@ import Button from '../ui/Button'
 import ImagePlaceholder from '../ui/ImagePlaceholder'
 import CountdownTimer from '../ui/CountdownTimer'
 
-
 const Hero = ({ data }) => {
     const scrollToRSVP = () => {
         document.getElementById('rsvp')?.scrollIntoView({ behavior: 'smooth' })
     }
 
     return (
-
         <section className="min-h-screen bg-white flex items-center justify-center relative overflow-hidden">
             <div style={{ marginTop: '100px' }}></div>
 
@@ -39,7 +37,7 @@ const Hero = ({ data }) => {
             </div>
 
             {/* Contenido principal */}
-            <div className="text-center z-10 max-w-4xl mx-auto px-6">
+            <div className="text-center z-10 max-w-4xl mx-auto px-6 pt-20">
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -65,21 +63,43 @@ const Hero = ({ data }) => {
                         <span>|</span>
                         <span>{data?.date.year}</span>
                     </div>
-
-
                 </motion.div>
-                <motion.div className="my-16">
-                    <h3 className="text-5xl font-light text-gray-600 mb-8">Nos vemos en...</h3>
-                    <CountdownTimer targetDate={data?.date.countdown} />
+
+                {/* FOTO 1 - Después de la fecha, antes del countdown */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1, delay: 1.0 }}
+                    className="my-12"
+                >
+                    <div className="relative mx-auto w-80 h-80 md:w-96 md:h-96">
+                        <img
+                            src="/images/1.jpg"
+                            alt="Daniel y Raquel"
+                            className="w-full h-full object-cover shadow-2xl"
+                        />
+                        {/* Overlay sutil para efecto elegante */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent rounded-3xl"></div>
+                    </div>
                 </motion.div>
+
+                {/* Countdown Timer */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, delay: 1.2 }}
+                    transition={{ duration: 1, delay: 1.3 }}
+                    className="my-16"
+                >
+                    <h3 className="text-5xl font-light text-gray-600 mb-8">Nos vemos en...</h3>
+                    <CountdownTimer targetDate={data?.date.countdown} />
+                </motion.div>
+
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1, delay: 1.5 }}
                     className="mt-16 space-y-6"
                 >
-
-
                     <p className="text-sm text-gray-400 max-w-md mx-auto">
                         Una celebración íntima donde cada invitado es especial para nosotros
                     </p>
