@@ -39,7 +39,8 @@ const Footer = ({ data }) => {
                             <Mail className="w-6 h-6" />
                         </motion.a>
                         <motion.a
-                            href="#galeria"
+                            href="https://photos.app.goo.gl/ENLACE_DEL_ALBUM"
+                            target="_blank"
                             whileHover={{ scale: 1.1, y: -2 }}
                             className="bg-white/10 p-4 border border-white/20 hover:bg-white hover:text-black transition-all"
                         >

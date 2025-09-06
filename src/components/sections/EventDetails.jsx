@@ -26,21 +26,15 @@ const EventDetails = ({ data }) => {
                     <h2 className="text-7xl font-light mb-8 text-black">El gran dia</h2>
                 </motion.div>
 
-                {/* FOTO 3 - Encima de los divs */}
-                <motion.div
+                {/* FOTO 3 - Directamente después del título, sin contenedor */}
+                <motion.img
+                    src="/images/3.jpg"
+                    alt="Daniel y Raquel - El gran día"
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={inView ? { opacity: 1, scale: 1 } : {}}
                     transition={{ duration: 1, delay: 0.3 }}
-                    className="mb-16"
-                >
-                    <div className="max-w-3xl mx-auto">
-                        <img
-                            src="/images/3.jpg"
-                            alt="Daniel y Raquel - El gran día"
-                            className="w-full h-64 md:h-80 object-cover shadow-xl"
-                        />
-                    </div>
-                </motion.div>
+                    className="w-full max-w-4xl h-96 md:h-112 object-contain mx-auto mb-16"
+                />
 
                 {/* SOLO DOS DIVS COMO ANTES */}
                 <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
