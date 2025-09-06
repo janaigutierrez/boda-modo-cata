@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
-import { Heart, Instagram, Mail, Camera } from 'lucide-react'
-import Button from '../ui/Button'
+import { Heart, Mail, Camera } from 'lucide-react'
 
 const Footer = ({ data }) => {
     return (
@@ -29,7 +28,7 @@ const Footer = ({ data }) => {
                         </div>
                     </div>
 
-                    {/* Social Links - ESTILO ANGULAR */}
+                    {/* Social Links */}
                     <div className="flex justify-center space-x-6 mb-12">
                         <motion.a
                             href={`mailto:${data?.contact.email || 'bodaenmodocata@gmail.com'}`}

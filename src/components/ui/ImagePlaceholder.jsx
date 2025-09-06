@@ -1,4 +1,3 @@
-// src/components/ui/ImagePlaceholder.jsx
 const ImagePlaceholder = ({ size = 'medium', text, icon }) => {
     const sizes = {
         small: 'w-32 h-32',

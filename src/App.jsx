@@ -5,8 +5,6 @@ import EventDetails from './components/sections/EventDetails'
 import RSVP from './components/sections/RSVP'
 import Footer from './components/common/Footer'
 import OurStory from './components/sections/OurStory'
-
-// Import wedding data
 import { weddingData } from './data/weddingData'
 
 function App() {

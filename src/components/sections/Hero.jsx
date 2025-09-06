@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
-import { Heart, ArrowDown } from 'lucide-react'
-import Button from '../ui/Button'
+import { ArrowDown } from 'lucide-react'
 import CountdownTimer from '../ui/CountdownTimer'
 
 const Hero = ({ data }) => {
@@ -10,7 +9,7 @@ const Hero = ({ data }) => {
 
     return (
         <section className="min-h-screen relative overflow-hidden">
-            {/* Foto 1 como fondo completo */}
+            {/* Foto 1 */}
             <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat"
                 style={{
@@ -18,10 +17,10 @@ const Hero = ({ data }) => {
                 }}
             />
 
-            {/* Overlay oscuro para legibilidad */}
+            {/* Overlay oscuro */}
             <div className="absolute inset-0 bg-black/40" />
 
-            {/* Contenido superpuesto */}
+            {/* Contenido */}
             <div className="relative z-10 min-h-screen flex items-center justify-center">
                 <div style={{ marginTop: '100px' }}></div>
 

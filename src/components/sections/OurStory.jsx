@@ -1,8 +1,6 @@
-// src/components/sections/OurStory.jsx - ORIGINAL con fotos reales
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { Heart } from 'lucide-react'
-import Card from '../ui/Card'
 
 const OurStory = ({ data }) => {
     const [ref, inView] = useInView({
@@ -72,7 +70,7 @@ const OurStory = ({ data }) => {
                         transition={{ duration: 1, delay: 0.3 }}
                         className="grid grid-cols-2 gap-6"
                     >
-                        {/* Foto principal grande */}
+                        {/* Foto principal */}
                         <div className="col-span-2">
                             <img
                                 src="/images/2.jpg"
@@ -81,7 +79,7 @@ const OurStory = ({ data }) => {
                             />
                         </div>
 
-                        {/* Fotos pequeñas */}
+                        {/* Fotos */}
                         <div>
                             <img
                                 src="/images/4.jpg"

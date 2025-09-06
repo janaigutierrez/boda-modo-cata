@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { Heart, Star, Camera } from 'lucide-react'
+import { Heart } from 'lucide-react'
 import Card from '../ui/Card'
 
 const CatalinaSection = ({ data }) => {
@@ -26,7 +26,7 @@ const CatalinaSection = ({ data }) => {
                     </div>
                 </motion.div>
 
-                {/* Composición de fotos de Catalina - dues quadrades i una vertical */}
+                {/* Composición de fotos */}
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -34,7 +34,7 @@ const CatalinaSection = ({ data }) => {
                     className="mb-16"
                 >
                     <div className="flex items-start justify-center gap-2 sm:gap-3 max-w-3xl mx-auto px-4">
-                        {/* Fotos 5 y 8 apiladas - QUADRADES */}
+                        {/* Fotos 5 y 8 apiladas */}
                         <div className="flex flex-col gap-2 sm:gap-3">
                             <img
                                 src="/images/5.jpg"
@@ -48,7 +48,7 @@ const CatalinaSection = ({ data }) => {
                             />
                         </div>
 
-                        {/* Foto 7 vertical */}
+                        {/* Foto 7 */}
                         <img
                             src="/images/7.jpg"
                             alt="Catalina"
@@ -57,7 +57,7 @@ const CatalinaSection = ({ data }) => {
                     </div>
                 </motion.div>
 
-                {/* Info de Catalina debajo de las fotos */}
+                {/* Info */}
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -75,7 +75,7 @@ const CatalinaSection = ({ data }) => {
                         </p>
                     </div>
 
-                    {/* Stats de Catalina */}
+                    {/* Stats */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
                         <Card hover={true} gradient={true}>
                             <div className="text-2xl font-bold text-black">Casi 3 años</div>

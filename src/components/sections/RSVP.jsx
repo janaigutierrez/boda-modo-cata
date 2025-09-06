@@ -1,4 +1,3 @@
-// src/components/sections/RSVP.jsx
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { useForm } from 'react-hook-form'
@@ -21,7 +20,6 @@ const RSVP = ({ data }) => {
         setIsSubmitting(true)
 
         try {
-            // Usar URLSearchParams en lugar de FormData
             const body = new URLSearchParams()
             body.append("entry.514764643", formData.nombre || "")
             body.append("entry.1325579506", formData.email || "")
@@ -31,8 +29,6 @@ const RSVP = ({ data }) => {
             body.append("entry.2077565567", formData.alergias || "")
             body.append("entry.121257817", formData.menuVeggie || "")
             body.append("entry.2028635582", formData.mensaje || "")
-
-            console.log('Enviando datos:', formData) // Para debugging
 
             await fetch(
                 "https://docs.google.com/forms/d/e/1FAIpQLScgGg5y7jcQ_i7i9IRRWw9VSudOShweyCgOL64z3G862CrMtw/formResponse",
@@ -49,7 +45,6 @@ const RSVP = ({ data }) => {
             setIsSubmitted(true)
         } catch (error) {
             console.error('Error al enviar el formulario:', error)
-            // Mostrar mensaje de éxito de todas formas porque no-cors no permite saber si falló
             setIsSubmitted(true)
         } finally {
             setIsSubmitting(false)

@@ -45,7 +45,7 @@ const Header = () => {
                         />
                     </div>
 
-                    {/* Desktop Menu - ESTILOS ANGULARES */}
+                    {/* Desktop Menu */}
                     <div className="hidden md:flex space-x-8">
                         {[
                             { name: 'Inicio', id: 'hero' },
@@ -72,7 +72,7 @@ const Header = () => {
                     </button>
                 </div>
 
-                {/* Mobile Menu - ESTILO ANGULAR */}
+                {/* Mobile Menu */}
                 {isMobileMenuOpen && (
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}

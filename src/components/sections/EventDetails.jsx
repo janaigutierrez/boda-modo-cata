@@ -1,4 +1,3 @@
-// src/components/sections/EventDetails.jsx
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { MapPin, Clock, Bus, ChevronDown, ChevronUp } from 'lucide-react'
@@ -26,7 +25,7 @@ const EventDetails = ({ data }) => {
                     <h2 className="text-7xl font-light mb-8 text-black">El gran dia</h2>
                 </motion.div>
 
-                {/* FOTO 3 - Directamente después del título, sin contenedor */}
+                {/* FOTO 3 */}
                 <motion.img
                     src="/images/3.jpg"
                     alt="Daniel y Raquel - El gran día"
@@ -36,9 +35,8 @@ const EventDetails = ({ data }) => {
                     className="w-full max-w-4xl h-96 md:h-112 object-contain mx-auto mb-16"
                 />
 
-                {/* SOLO DOS DIVS COMO ANTES */}
                 <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
-                    {/* Ceremonia y Celebración CON MAPA DESPLEGABLE */}
+                    {/* Ceremonia y Celebración */}
                     <motion.div
                         initial={{ opacity: 0, y: 60 }}
                         animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -82,7 +80,7 @@ const EventDetails = ({ data }) => {
                                     )}
                                 </motion.button>
 
-                                {/* Mapa desplegable con animación */}
+                                {/* Mapa desplegable */}
                                 <motion.div
                                     initial={false}
                                     animate={{

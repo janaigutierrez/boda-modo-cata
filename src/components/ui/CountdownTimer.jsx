@@ -1,6 +1,4 @@
-// src/components/ui/CountdownTimer.jsx
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
 
 const CountdownTimer = ({ targetDate }) => {
     const [timeLeft, setTimeLeft] = useState({

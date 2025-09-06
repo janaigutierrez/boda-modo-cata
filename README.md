@@ -1,12 +1,43 @@
-# React + Vite
+# Web de Boda - Daniel & Raquel
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Web minimalista con React + Vite para la boda de Daniel, Raquel y Catalina.
 
-Currently, two official plugins are available:
+## Quick Start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+npm install
+npm run dev
+npm run build
+```
 
-## Expanding the ESLint configuration
+## Stack
+- React 18 + Vite + TailwindCSS v4
+- Framer Motion + React Hook Form
+- Deploy: Netlify
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Estructura
+```
+src/
+├── components/sections/    # Hero, Catalina, EventDetails, RSVP, OurStory
+├── components/ui/         # Button, Card, CountdownTimer
+├── data/weddingData.js    # Datos centralizados
+└── public/images/         # Fotos 1.jpg a 8.jpg
+```
+
+## Fotos
+- **1.jpg**: Hero (fondo)
+- **2,4,6.jpg**: Our Story 
+- **3.jpg**: Event Details
+- **5,7,8.jpg**: Catalina Section
+
+## Funcionalidades
+- Countdown timer en tiempo real
+- Formulario RSVP → Google Sheets
+- Mapa Google Maps desplegable
+- Timeline con línea vertical
+- Responsive design completo
+
+## Configuración
+- Datos: editar `src/data/weddingData.js`
+- Fotos: reemplazar en `public/images/`
+- Deploy: Netlify
