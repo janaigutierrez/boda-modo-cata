@@ -52,7 +52,7 @@ const CatalinaSection = ({ data }) => {
                         <img
                             src="/images/7.jpg"
                             alt="Catalina"
-                            className="w-40 h-80 sm:w-48 sm:h-96 md:w-64 md:h-128 lg:w-80 lg:h-160 object-cover shadow-md"
+                            className="w-40 h-82 sm:w-48 sm:h-96 md:w-64 md:h-128 lg:w-80 lg:h-160 object-cover shadow-md"
                         />
                     </div>
                 </motion.div>
