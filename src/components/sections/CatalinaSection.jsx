@@ -26,25 +26,25 @@ const CatalinaSection = ({ data }) => {
                     </div>
                 </motion.div>
 
-                {/* Composición de fotos de Catalina - proporción 80 */}
+                {/* Composición de fotos de Catalina - responsive mantenint mides PC */}
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     animate={inView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 1, delay: 0.3 }}
                     className="mb-16"
                 >
-                    <div className="flex items-start justify-center gap-3 max-w-3xl mx-auto">
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-3xl mx-auto px-4">
                         {/* Fotos 5 y 8 apiladas */}
                         <div className="flex flex-col gap-3">
                             <img
                                 src="/images/5.jpg"
                                 alt="Catalina"
-                                className="w-80 h-60 object-cover shadow-md"
+                                className="w-64 h-48 sm:w-80 sm:h-60 object-cover shadow-md"
                             />
                             <img
                                 src="/images/8.jpg"
                                 alt="Catalina"
-                                className="w-80 h-60 object-cover shadow-md"
+                                className="w-64 h-48 sm:w-80 sm:h-60 object-cover shadow-md"
                             />
                         </div>
 
@@ -52,7 +52,7 @@ const CatalinaSection = ({ data }) => {
                         <img
                             src="/images/7.jpg"
                             alt="Catalina"
-                            className="w-80 h-123 object-cover shadow-md"
+                            className="w-64 h-96 sm:w-80 sm:h-123 object-cover shadow-md"
                         />
                     </div>
                 </motion.div>
