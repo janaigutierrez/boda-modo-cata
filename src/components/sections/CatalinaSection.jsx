@@ -26,7 +26,7 @@ const CatalinaSection = ({ data }) => {
                     </div>
                 </motion.div>
 
-                {/* Composición de fotos de Catalina - sempre dues i una al costat */}
+                {/* Composición de fotos de Catalina - dues quadrades i una vertical */}
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -34,17 +34,17 @@ const CatalinaSection = ({ data }) => {
                     className="mb-16"
                 >
                     <div className="flex items-start justify-center gap-2 sm:gap-3 max-w-3xl mx-auto px-4">
-                        {/* Fotos 5 y 8 apiladas */}
+                        {/* Fotos 5 y 8 apiladas - QUADRADES */}
                         <div className="flex flex-col gap-2 sm:gap-3">
                             <img
                                 src="/images/5.jpg"
                                 alt="Catalina"
-                                className="w-32 h-24 sm:w-48 sm:h-36 md:w-64 md:h-48 lg:w-80 lg:h-60 object-cover shadow-md"
+                                className="w-40 h-40 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 object-cover shadow-md"
                             />
                             <img
                                 src="/images/8.jpg"
                                 alt="Catalina"
-                                className="w-32 h-24 sm:w-48 sm:h-36 md:w-64 md:h-48 lg:w-80 lg:h-60 object-cover shadow-md"
+                                className="w-40 h-40 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 object-cover shadow-md"
                             />
                         </div>
 
@@ -52,7 +52,7 @@ const CatalinaSection = ({ data }) => {
                         <img
                             src="/images/7.jpg"
                             alt="Catalina"
-                            className="w-32 h-48 sm:w-48 sm:h-72 md:w-64 md:h-96 lg:w-80 lg:h-123 object-cover shadow-md"
+                            className="w-40 h-80 sm:w-48 sm:h-96 md:w-64 md:h-128 lg:w-80 lg:h-160 object-cover shadow-md"
                         />
                     </div>
                 </motion.div>
