@@ -28,21 +28,21 @@ const RSVP = ({ data }) => {
             body.append("entry.954168348", formData.transporte || "")
             body.append("entry.2077565567", formData.alergias || "")
             body.append("entry.121257817", formData.menuVeggie || "")
-            // NUEVO CAMPO PARA NIÑOS
             body.append("entry.1055691836", formData.ninos || "")
             body.append("entry.2028635582", formData.mensaje || "")
 
-            await fetch(
-                "https://docs.google.com/forms/d/e/1FAIpQLScgGg5y7jcQ_i7i9IRRWw9VSudOShweyCgOL64z3G862CrMtw/formResponse",
-                {
-                    method: "POST",
-                    body: body,
-                    mode: "no-cors",
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    }
+            const formUrl = process.env.NODE_ENV === 'production'
+                ? '/api/google-forms'
+                : 'https://docs.google.com/forms/d/e/1FAIpQLScgGg5y7jcQ_i7i9IRRWw9VSudOShweyCgOL64z3G862CrMtw/formResponse'
+
+            await fetch(formUrl, {
+                method: "POST",
+                body: body,
+                mode: "no-cors",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 }
-            )
+            })
 
             setIsSubmitted(true)
         } catch (error) {
@@ -63,9 +63,9 @@ const RSVP = ({ data }) => {
                         transition={{ duration: 0.5 }}
                     >
                         <CheckCircle className="w-24 h-24 text-green-500 mx-auto mb-8" />
-                        <h2 className="text-5xl font-light mb-6">¡Gracias!</h2>
+                        <h2 className="text-5xl font-light mb-6">¡Muchas gracias!</h2>
                         <p className="text-xl text-gray-600">
-                            Hemos recibido tu confirmación. Te enviaremos todos los detalles por email.
+                            Hemos recibido tu confirmación. Más adelante te enviaremos todos los detalles por email.
                         </p>
                         <div className="mt-8">
                             <Button
@@ -175,10 +175,9 @@ const RSVP = ({ data }) => {
                                 </select>
                             </div>
 
-                            {/* 🆕 NUEVO CAMPO PARA NIÑOS - RADIO BUTTONS */}
                             <div>
                                 <label className="block text-lg font-medium mb-3 text-black">
-                                    ¿Vendrás acompañado/a de niños? (2-12 años) 👶
+                                    ¿Vendrás acompañado/a de niños? (2-12 años)
                                 </label>
                                 <div className="space-y-3">
                                     <label className="flex items-center space-x-3">
@@ -197,7 +196,7 @@ const RSVP = ({ data }) => {
                                             {...register('ninos')}
                                             className="w-4 h-4 text-black border-2 border-gray-300 focus:ring-black"
                                         />
-                                        <span>Sí, 1 niño/a (2-12 años)</span>
+                                        <span>Sí, 1</span>
                                     </label>
                                     <label className="flex items-center space-x-3">
                                         <input
@@ -206,7 +205,7 @@ const RSVP = ({ data }) => {
                                             {...register('ninos')}
                                             className="w-4 h-4 text-black border-2 border-gray-300 focus:ring-black"
                                         />
-                                        <span>Sí, 2 niños/as (2-12 años)</span>
+                                        <span>Sí, 2 </span>
                                     </label>
                                     <label className="flex items-center space-x-3">
                                         <input
@@ -215,7 +214,7 @@ const RSVP = ({ data }) => {
                                             {...register('ninos')}
                                             className="w-4 h-4 text-black border-2 border-gray-300 focus:ring-black"
                                         />
-                                        <span>Sí, 3 niños/as (2-12 años)</span>
+                                        <span>Sí, 3</span>
                                     </label>
                                     <label className="flex items-center space-x-3">
                                         <input
@@ -224,7 +223,7 @@ const RSVP = ({ data }) => {
                                             {...register('ninos')}
                                             className="w-4 h-4 text-black border-2 border-gray-300 focus:ring-black"
                                         />
-                                        <span>Sí, 4 o más niños/as (2-12 años)</span>
+                                        <span>Sí, 4 </span>
                                     </label>
                                 </div>
                                 <p className="text-sm text-gray-500 mt-2">
@@ -282,7 +281,7 @@ const RSVP = ({ data }) => {
                                     {...register('mensaje')}
                                     rows={4}
                                     className="w-full p-4 border-2 border-gray-200 text-lg focus:border-black focus:outline-none transition-colors resize-none"
-                                    placeholder="Deja aquí tus mejores deseos... Si vienes con niños, también puedes especificar sus nombres y edades 😊"
+                                    placeholder="Deja aquí tu comentario..."
                                 />
                             </div>
 

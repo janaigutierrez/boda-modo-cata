@@ -1,0 +1,6 @@
+[[redirects]]
+  from = "/api/google-forms"
+  to = "https://docs.google.com/forms/d/e/1FAIpQLScgGg5y7jcQ_i7i9IRRWw9VSudOShweyCgOL64z3G862CrMtw/formResponse"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
