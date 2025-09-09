@@ -28,6 +28,8 @@ const RSVP = ({ data }) => {
             body.append("entry.954168348", formData.transporte || "")
             body.append("entry.2077565567", formData.alergias || "")
             body.append("entry.121257817", formData.menuVeggie || "")
+            // NUEVO CAMPO PARA NIÑOS
+            body.append("entry.1055691836", formData.ninos || "")
             body.append("entry.2028635582", formData.mensaje || "")
 
             await fetch(
@@ -173,6 +175,27 @@ const RSVP = ({ data }) => {
                                 </select>
                             </div>
 
+                            {/* 🆕 NUEVO CAMPO PARA NIÑOS */}
+                            <div>
+                                <label className="block text-lg font-medium mb-3 text-black">
+                                    ¿Vendrás acompañado/a de niños? (2-12 años)
+                                </label>
+                                <select
+                                    {...register('ninos')}
+                                    className="w-full p-4 border-2 border-gray-200 text-lg focus:border-black focus:outline-none transition-colors"
+                                >
+                                    <option value="">Selecciona una opción</option>
+                                    <option value="No">No, sin niños</option>
+                                    <option value="1">Sí, 1 </option>
+                                    <option value="2">Sí, 2 </option>
+                                    <option value="3">Sí, 3 </option>
+                                    <option value="4+">Sí, 4 </option>
+                                </select>
+                                <p className="text-sm text-gray-500 mt-2">
+                                    ℹ️ Para planificar el menú infantil adecuado
+                                </p>
+                            </div>
+
                             <div>
                                 <label className="block text-lg font-medium mb-3 text-black">
                                     ¿Necesitas transporte?
@@ -223,7 +246,7 @@ const RSVP = ({ data }) => {
                                     {...register('mensaje')}
                                     rows={4}
                                     className="w-full p-4 border-2 border-gray-200 text-lg focus:border-black focus:outline-none transition-colors resize-none"
-                                    placeholder="Deja aquí tus mejores deseos..."
+                                    placeholder="Escribe aqui tu comentario..."
                                 />
                             </div>
 
