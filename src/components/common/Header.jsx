@@ -84,7 +84,7 @@ const Header = () => {
                                 { name: 'Inicio', id: 'hero' },
                                 { name: 'Historia', id: 'story' },
                                 { name: 'Detalles', id: 'detalles' },
-                                { name: 'RSVP', id: 'rsvp' }
+                                { name: 'Confirmar Asistencia', id: 'rsvp' }
                             ].map((item) => (
                                 <button
                                     key={item.id}
