@@ -179,53 +179,17 @@ const RSVP = ({ data }) => {
                                 <label className="block text-lg font-medium mb-3 text-black">
                                     ¿Vendrás acompañado/a de niños? (2-12 años)
                                 </label>
-                                <div className="space-y-3">
-                                    <label className="flex items-center space-x-3">
-                                        <input
-                                            type="radio"
-                                            value="0"
-                                            {...register('ninos')}
-                                            className="w-4 h-4 text-black border-2 border-gray-300 focus:ring-black"
-                                        />
-                                        <span>No, sin niños</span>
-                                    </label>
-                                    <label className="flex items-center space-x-3">
-                                        <input
-                                            type="radio"
-                                            value="1"
-                                            {...register('ninos')}
-                                            className="w-4 h-4 text-black border-2 border-gray-300 focus:ring-black"
-                                        />
-                                        <span>Sí, 1</span>
-                                    </label>
-                                    <label className="flex items-center space-x-3">
-                                        <input
-                                            type="radio"
-                                            value="2"
-                                            {...register('ninos')}
-                                            className="w-4 h-4 text-black border-2 border-gray-300 focus:ring-black"
-                                        />
-                                        <span>Sí, 2 </span>
-                                    </label>
-                                    <label className="flex items-center space-x-3">
-                                        <input
-                                            type="radio"
-                                            value="3"
-                                            {...register('ninos')}
-                                            className="w-4 h-4 text-black border-2 border-gray-300 focus:ring-black"
-                                        />
-                                        <span>Sí, 3</span>
-                                    </label>
-                                    <label className="flex items-center space-x-3">
-                                        <input
-                                            type="radio"
-                                            value="4"
-                                            {...register('ninos')}
-                                            className="w-4 h-4 text-black border-2 border-gray-300 focus:ring-black"
-                                        />
-                                        <span>Sí, 4 </span>
-                                    </label>
-                                </div>
+                                <select
+                                    {...register('ninos')}
+                                    className="w-full p-4 border-2 border-gray-200 text-lg focus:border-black focus:outline-none transition-colors"
+                                >
+                                    <option value="">Selecciona una opción</option>
+                                    <option value="No">No, sin niños</option>
+                                    <option value="1">Sí, 1 niño/a</option>
+                                    <option value="2">Sí, 2 niños/as</option>
+                                    <option value="3">Sí, 3 niños/as</option>
+                                    <option value="4">Sí, 4 niños/as</option>
+                                </select>
                                 <p className="text-sm text-gray-500 mt-2">
                                     ℹ️ Para planificar el menú infantil adecuado
                                 </p>
