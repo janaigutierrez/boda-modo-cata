@@ -3,10 +3,6 @@ import { ArrowDown } from 'lucide-react'
 import CountdownTimer from '../ui/CountdownTimer'
 
 const Hero = ({ data }) => {
-    const scrollToRSVP = () => {
-        document.getElementById('rsvp')?.scrollIntoView({ behavior: 'smooth' })
-    }
-
     return (
         <section className="min-h-screen relative overflow-hidden">
             {/* Foto 1 */}

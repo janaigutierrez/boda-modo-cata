@@ -5,8 +5,13 @@ Web minimalista con React + Vite para la boda de Daniel, Raquel y Catalina.
 ## Quick Start
 
 ```bash
+# instalar dependencias
 npm install
+
+# ejecutar en modo desarrollo
 npm run dev
+
+# build para producción
 npm run build
 ```
 
