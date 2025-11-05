@@ -39,7 +39,8 @@ export const weddingData = {
     contact: {
         email: "bodaenmodocata@gmail.com",
         instagram: "@raqueldani2025",
-        hashtag: "#bodaenmodocata"
+        hashtag: "#bodaenmodocata",
+        photoAlbum: "https://photos.app.goo.gl/dSDsppXbDSu5ZxTNA"
     },
     messages: {
         heroSubtitle: "Celebramos nuestro amor junto a Cata",
