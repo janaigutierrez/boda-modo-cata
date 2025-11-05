@@ -15,7 +15,7 @@ export const weddingData = {
     locations: {
         ceremony: {
             name: "Església de Santa Maria de Llerona",
-            address: "Carrer de l'Església, 08480 L'Ametlla del Vallès, Barcelona",
+            address: "Carrer Pas de la Creu s/n, 08520 Llerona, Barcelona",
             time: "17:30h",
             description: "Ceremonia religiosa",
             mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5498.50902040178!2d2.298460467111146!3d41.65031689953685!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a4c6031d9923b7%3A0x2b2c894457dee7cd!2sEsgl%C3%A9sia%20de%20Santa%20Maria%20de%20Llerona!5e1!3m2!1sca!2ses!4v1762281198704!5m2!1sca!2ses"
