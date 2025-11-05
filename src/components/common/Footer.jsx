@@ -34,22 +34,42 @@ const Footer = ({ data }) => {
                             href={`mailto:${data?.contact.email || 'bodaenmodocata@gmail.com'}`}
                             whileHover={{ scale: 1.1, y: -2 }}
                             className="bg-white/10 p-4 border border-white/20 hover:bg-white hover:text-black transition-all"
+                            aria-label="Enviar email"
                         >
                             <Mail className="w-6 h-6" />
                         </motion.a>
                         <motion.a
-                            href="https://photos.app.goo.gl/ENLACE_DEL_ALBUM"
+                            href={data?.contact.photoAlbum || "https://photos.app.goo.gl/ENLACE_DEL_ALBUM"}
                             target="_blank"
+                            rel="noopener noreferrer"
                             whileHover={{ scale: 1.1, y: -2 }}
                             className="bg-white/10 p-4 border border-white/20 hover:bg-white hover:text-black transition-all"
+                            aria-label="Ver álbum de fotos"
                         >
                             <Camera className="w-6 h-6" />
                         </motion.a>
                     </div>
 
                     {/* Hashtag */}
-                    <div className="text-2xl font-light mb-12 text-gray-300">
+                    <div className="text-2xl font-light mb-8 text-gray-300">
                         {data?.contact.hashtag}
+                    </div>
+
+                    {/* Call to action del álbum */}
+                    <div className="mb-12">
+                        <p className="text-gray-300 mb-4">
+                            ¡Comparte tus fotos de la boda con nosotros!
+                        </p>
+                        <motion.a
+                            href={data?.contact.photoAlbum || "https://photos.app.goo.gl/dSDsppXbDSu5ZxTNA"}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="inline-block bg-white text-black px-8 py-3 font-medium hover:bg-gray-200 transition-all"
+                        >
+                            Subir fotos al álbum
+                        </motion.a>
                     </div>
 
                     {/* Credits */}
