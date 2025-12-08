@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { useForm } from 'react-hook-form'
-import { Heart, Send, CheckCircle } from 'lucide-react'
+import { Heart, Send, CheckCircle, AlertCircle, ExternalLink } from 'lucide-react'
 import { useState } from 'react'
 import Button from '../ui/Button'
 import Card from '../ui/Card'
@@ -14,45 +14,215 @@ const RSVP = ({ data }) => {
 
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [submitError, setSubmitError] = useState(false)
+    const [errorDetails, setErrorDetails] = useState('')
     const { register, handleSubmit, formState: { errors } } = useForm()
+
+    // URL del Google Form per fallback directe
+    const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScgGg5y7jcQ_i7i9IRRWw9VSudOShweyCgOL64z3G862CrMtw/viewform'
 
     const onSubmit = async (formData) => {
         setIsSubmitting(true)
+        setSubmitError(false)
+        setErrorDetails('')
+
+        console.log('🚀 Iniciando envío de formulario...')
+        console.log('📱 User Agent:', navigator.userAgent)
+        console.log('👤 Nombre:', formData.nombre)
 
         try {
-            const body = new URLSearchParams()
-            body.append("entry.514764643", formData.nombre || "")
-            body.append("entry.1325579506", formData.email || "")
-            body.append("entry.1842802559", formData.asistencia || "")
-            body.append("entry.18465505", formData.acompanante || "")
-            body.append("entry.954168348", formData.transporte || "")
-            body.append("entry.2077565567", formData.alergias || "")
-            body.append("entry.121257817", formData.menuVeggie || "")
-            body.append("entry.1055691836", formData.ninos || "")
-            body.append("entry.2028635582", formData.mensaje || "")
+            // Intentar amb Netlify Function (la millor opció)
+            console.log('🔄 Enviando via Netlify Function...')
 
-            const formUrl = process.env.NODE_ENV === 'production'
-                ? '/api/google-forms'
-                : 'https://docs.google.com/forms/d/e/1FAIpQLScgGg5y7jcQ_i7i9IRRWw9VSudOShweyCgOL64z3G862CrMtw/formResponse'
-
-            await fetch(formUrl, {
-                method: "POST",
-                body: body,
-                mode: "no-cors",
+            const response = await fetch('/.netlify/functions/submit-form', {
+                method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                }
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
             })
 
-            setIsSubmitted(true)
-        } catch (error) {
-            console.error('Error al enviar el formulario:', error)
-            setIsSubmitted(true)
+            const result = await response.json()
+
+            console.log('📥 Respuesta de Netlify Function:', result)
+
+            if (response.ok && result.success) {
+                console.log('✅ ¡Formulario enviado correctamente!')
+                setIsSubmitted(true)
+                return // Sortir aquí, tot ha anat bé!
+            } else {
+                // Si la function falla, intentem el backup
+                console.warn('⚠️ Netlify Function falló, intentando backup...')
+                throw new Error(result.error || 'Error desconocido')
+            }
+
+        } catch (netlifyError) {
+            console.error('❌ Error con Netlify Function:', netlifyError.message)
+
+            // BACKUP 1: Intentar enviar directament amb fetch
+            try {
+                console.log('🔄 Backup 1: Enviando directamente a Google Forms...')
+
+                const params = new URLSearchParams()
+                params.append("entry.514764643", formData.nombre || "")
+                params.append("entry.1325579506", formData.email || "")
+                params.append("entry.1842802559", formData.asistencia || "")
+                params.append("entry.18465505", formData.acompanante || "")
+                params.append("entry.954168348", formData.transporte || "")
+                params.append("entry.2077565567", formData.alergias || "")
+                params.append("entry.121257817", formData.menuVeggie || "")
+                params.append("entry.1055691836", formData.ninos || "")
+                params.append("entry.2028635582", formData.mensaje || "")
+
+                await fetch(
+                    'https://docs.google.com/forms/d/e/1FAIpQLScgGg5y7jcQ_i7i9IRRWw9VSudOShweyCgOL64z3G862CrMtw/formResponse',
+                    {
+                        method: 'POST',
+                        mode: 'no-cors', // Necessari però no podem verificar resposta
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: params.toString()
+                    }
+                )
+
+                console.log('✅ Backup 1 completado (no-cors, asumimos éxito)')
+                setIsSubmitted(true)
+                return
+
+            } catch (fetchError) {
+                console.error('❌ Backup 1 falló:', fetchError.message)
+
+                // BACKUP 2: Intentar amb XMLHttpRequest (millor compatibilitat Android)
+                try {
+                    console.log('🔄 Backup 2: Intentando con XMLHttpRequest...')
+
+                    await sendWithXHR(formData)
+
+                    console.log('✅ Backup 2 exitoso!')
+                    setIsSubmitted(true)
+                    return
+
+                } catch (xhrError) {
+                    console.error('❌ Backup 2 también falló:', xhrError.message)
+
+                    // Tot ha fallat, mostrar error amb opció d'obrir el form directe
+                    setSubmitError(true)
+                    setErrorDetails('No se pudo conectar con el servidor. Por favor, usa el formulario alternativo.')
+                }
+            }
         } finally {
             setIsSubmitting(false)
         }
     }
 
+    // Funció auxiliar XMLHttpRequest per millor compatibilitat
+    const sendWithXHR = (formData) => {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest()
+
+            xhr.open(
+                'POST',
+                'https://docs.google.com/forms/d/e/1FAIpQLScgGg5y7jcQ_i7i9IRRWw9VSudOShweyCgOL64z3G862CrMtw/formResponse',
+                true
+            )
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+
+            xhr.timeout = 8000 // 8 segons timeout
+
+            xhr.onload = function () {
+                console.log('📡 XHR onload - Status:', xhr.status)
+                if (xhr.status >= 200 && xhr.status < 400) {
+                    resolve()
+                } else {
+                    reject(new Error(`XHR status ${xhr.status}`))
+                }
+            }
+
+            xhr.onerror = function () {
+                console.error('❌ XHR onerror')
+                reject(new Error('XHR network error'))
+            }
+
+            xhr.ontimeout = function () {
+                console.error('⏱️ XHR timeout')
+                reject(new Error('XHR timeout'))
+            }
+
+            const params = new URLSearchParams()
+            params.append("entry.514764643", formData.nombre || "")
+            params.append("entry.1325579506", formData.email || "")
+            params.append("entry.1842802559", formData.asistencia || "")
+            params.append("entry.18465505", formData.acompanante || "")
+            params.append("entry.954168348", formData.transporte || "")
+            params.append("entry.2077565567", formData.alergias || "")
+            params.append("entry.121257817", formData.menuVeggie || "")
+            params.append("entry.1055691836", formData.ninos || "")
+            params.append("entry.2028635582", formData.mensaje || "")
+
+            xhr.send(params.toString())
+        })
+    }
+
+    // Pantalla d'ERROR amb opció de Google Form directe
+    if (submitError) {
+        return (
+            <section className="py-32 bg-gray-50">
+                <div className="max-w-2xl mx-auto px-6 text-center">
+                    <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <AlertCircle className="w-24 h-24 text-orange-500 mx-auto mb-8" />
+                        <h2 className="text-5xl font-light mb-6">Ups, algo no ha funcionado</h2>
+                        <p className="text-xl text-gray-600 mb-4">
+                            {errorDetails || 'Parece que hay un problema técnico con el formulario.'}
+                        </p>
+                        <p className="text-lg text-gray-500 mb-8">
+                            No te preocupes, puedes confirmar tu asistencia directamente:
+                        </p>
+
+                        <div className="space-y-4">
+                            <Button
+                                variant="primary"
+                                onClick={() => window.open(GOOGLE_FORM_URL, '_blank')}
+                                className="w-full md:w-auto"
+                            >
+                                <ExternalLink className="w-5 h-5 mr-2 inline" />
+                                Abrir formulario de Google
+                            </Button>
+
+                            <div className="text-gray-400 text-sm">o</div>
+
+                            <Button
+                                variant="secondary"
+                                onClick={() => {
+                                    setSubmitError(false)
+                                    setErrorDetails('')
+                                }}
+                                className="w-full md:w-auto"
+                            >
+                                Volver a intentar aquí
+                            </Button>
+                        </div>
+
+                        <p className="text-sm text-gray-500 mt-8">
+                            Si el problema persiste, escríbenos a{' '}
+                            <a
+                                href={`mailto:${data?.contact.email}`}
+                                className="underline hover:text-black transition-colors"
+                            >
+                                {data?.contact.email}
+                            </a>
+                        </p>
+                    </motion.div>
+                </div>
+            </section>
+        )
+    }
+
+    // Pantalla d'ÈXIT
     if (isSubmitted) {
         return (
             <section className="py-32 bg-gray-50">
@@ -64,8 +234,11 @@ const RSVP = ({ data }) => {
                     >
                         <CheckCircle className="w-24 h-24 text-green-500 mx-auto mb-8" />
                         <h2 className="text-5xl font-light mb-6">¡Muchas gracias!</h2>
-                        <p className="text-xl text-gray-600">
-                            Hemos recibido tu confirmación. Más adelante te enviaremos todos los detalles por email.
+                        <p className="text-xl text-gray-600 mb-4">
+                            Hemos recibido tu confirmación correctamente.
+                        </p>
+                        <p className="text-lg text-gray-500 mb-8">
+                            Más adelante te enviaremos todos los detalles por email.
                         </p>
                         <div className="mt-8">
                             <Button
@@ -81,6 +254,7 @@ const RSVP = ({ data }) => {
         )
     }
 
+    // FORMULARI PRINCIPAL
     return (
         <section className="py-32 bg-gray-50" ref={ref}>
             <div className="max-w-4xl mx-auto px-6">
@@ -249,7 +423,7 @@ const RSVP = ({ data }) => {
                                 />
                             </div>
 
-                            {/* BOTÓN */}
+                            {/* BOTÓN SUBMIT */}
                             <div className="text-center pt-4">
                                 <Button
                                     type="submit"
@@ -257,7 +431,11 @@ const RSVP = ({ data }) => {
                                     disabled={isSubmitting}
                                     className="text-xl px-16"
                                 >
-                                    {isSubmitting ? 'Enviando...' : (
+                                    {isSubmitting ? (
+                                        <>
+                                            <span className="animate-pulse">Enviando...</span>
+                                        </>
+                                    ) : (
                                         <>
                                             <Send className="w-5 h-5 mr-2 inline" />
                                             Confirmar Asistencia
@@ -266,6 +444,34 @@ const RSVP = ({ data }) => {
                                 </Button>
                             </div>
                         </form>
+                    </Card>
+                </motion.div>
+
+                {/* BOTÓN ALTERNATIVO - Sempre visible */}
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={inView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 1, delay: 0.8 }}
+                    className="mt-12 text-center"
+                >
+                    <Card className="bg-blue-50 border-2 border-blue-200">
+                        <div className="flex flex-col items-center space-y-4">
+                            <AlertCircle className="w-8 h-8 text-blue-600" />
+                            <p className="text-gray-700 font-medium">
+                                ¿Tienes problemas con el formulario?
+                            </p>
+                            <Button
+                                variant="outline"
+                                onClick={() => window.open(GOOGLE_FORM_URL, '_blank')}
+                                className="w-full md:w-auto"
+                            >
+                                <ExternalLink className="w-5 h-5 mr-2 inline" />
+                                Abrir formulario de Google
+                            </Button>
+                            <p className="text-sm text-gray-500">
+                                Se abrirá en una nueva pestaña
+                            </p>
+                        </div>
                     </Card>
                 </motion.div>
             </div>
