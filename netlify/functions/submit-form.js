@@ -29,6 +29,10 @@ export async function handler(event, context) {
 
         console.log('📥 Formulario recibido de:', formData.nombre || 'Sin nombre')
         console.log('📧 Email destinatario:', formData.email)
+        console.log('🆔 Submission ID:', formData.submissionId || 'No ID')
+        console.log('📱 User Agent:', formData.userAgent || 'Unknown')
+        console.log('💻 Platform:', formData.platform || 'Unknown')
+        console.log('⏰ Server Time:', new Date().toISOString())
 
         // ============================================
         // PASO 1: ENVIAR A GOOGLE FORMS
@@ -46,8 +50,9 @@ export async function handler(event, context) {
 
         console.log('📤 Enviando a Google Forms...')
 
+        // Aumentar timeout a 15 segundos para mejores conexiones
         const controller = new AbortController()
-        const timeoutId = setTimeout(() => controller.abort(), 8000)
+        const timeoutId = setTimeout(() => controller.abort(), 15000)
 
         const googleResponse = await fetch(
             'https://docs.google.com/forms/d/e/1FAIpQLScgGg5y7jcQ_i7i9IRRWw9VSudOShweyCgOL64z3G862CrMtw/formResponse',
@@ -106,6 +111,7 @@ export async function handler(event, context) {
             : '🍖 Menú tradicional'
 
         try {
+            // Enviar email de confirmación al invitado
             const emailResult = await resend.emails.send({
                 from: 'Boda Raquel y Daniel <onboarding@resend.dev>', // Temporal, canviar després
                 to: formData.email,
@@ -218,10 +224,118 @@ export async function handler(event, context) {
 
             console.log('✅ Email enviado correctamente:', emailResult.id)
 
+            // ============================================
+            // PASO 3: ENVIAR NOTIFICACIÓN BACKUP A LOS NOVIOS
+            // ============================================
+            // Esto asegura que SIEMPRE sepáis cuando alguien confirma, incluso si el email al invitado falla
+            try {
+                await resend.emails.send({
+                    from: 'Sistema RSVP <onboarding@resend.dev>',
+                    to: 'bodaenmodocata@gmail.com',
+                    subject: `✅ Nueva confirmación: ${formData.nombre}`,
+                    html: `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <meta charset="utf-8">
+                        </head>
+                        <body style="font-family: Arial, sans-serif; padding: 20px;">
+                            <h2>✅ Nueva confirmación recibida</h2>
+                            <p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
+                            <p><strong>Submission ID:</strong> ${formData.submissionId || 'N/A'}</p>
+                            <p><strong>Estado email al invitado:</strong> Enviado correctamente ✅</p>
+                            <hr>
+                            <h3>Información técnica:</h3>
+                            <ul style="font-size: 12px; color: #666;">
+                                <li><strong>User Agent:</strong> ${formData.userAgent || 'Unknown'}</li>
+                                <li><strong>Platform:</strong> ${formData.platform || 'Unknown'}</li>
+                            </ul>
+                            <hr>
+                            <h3>Datos del invitado:</h3>
+                            <ul>
+                                <li><strong>Nombre:</strong> ${formData.nombre}</li>
+                                <li><strong>Email:</strong> ${formData.email}</li>
+                                <li><strong>Asistencia:</strong> ${asistenciaTexto}</li>
+                                <li><strong>Acompañante:</strong> ${acompananteTexto}</li>
+                                <li><strong>Transporte:</strong> ${transporteTexto}</li>
+                                <li><strong>Niños:</strong> ${ninosTexto}</li>
+                                <li><strong>Alergias:</strong> ${alergiasTexto}</li>
+                                <li><strong>Menú:</strong> ${menuVeggieTexto}</li>
+                                ${formData.mensaje ? `<li><strong>Mensaje:</strong> "${formData.mensaje}"</li>` : ''}
+                            </ul>
+                            <hr>
+                            <p style="color: #666; font-size: 12px;">
+                                Este email se envía automáticamente para asegurar que tengáis registro de todas las confirmaciones.
+                            </p>
+                        </body>
+                        </html>
+                    `
+                })
+                console.log('✅ Email backup a novios enviado')
+            } catch (backupEmailError) {
+                console.error('⚠️ Error enviando email backup a novios:', backupEmailError)
+                // No fallar la petición por esto, solo loguear
+            }
+
         } catch (emailError) {
             console.error('⚠️ Error enviando email:', emailError)
-            // Email falla pero Google Forms funcionó, retornem èxit igualment
-            // però informem que l'email ha fallat
+
+            // Email al invitado falló, pero Google Forms funcionó
+            // Enviar notificación a los novios con WARNING
+            try {
+                await resend.emails.send({
+                    from: 'Sistema RSVP <onboarding@resend.dev>',
+                    to: 'bodaenmodocata@gmail.com',
+                    subject: `⚠️ Confirmación recibida (email falló): ${formData.nombre}`,
+                    html: `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <meta charset="utf-8">
+                        </head>
+                        <body style="font-family: Arial, sans-serif; padding: 20px;">
+                            <h2>⚠️ Nueva confirmación recibida (con problema de email)</h2>
+                            <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0;">
+                                <p><strong>⚠️ ATENCIÓN:</strong> El formulario se guardó correctamente en Google Forms,
+                                pero el email de confirmación al invitado NO se pudo enviar.</p>
+                                <p><strong>Error:</strong> ${emailError.message}</p>
+                            </div>
+                            <p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
+                            <p><strong>Submission ID:</strong> ${formData.submissionId || 'N/A'}</p>
+                            <hr>
+                            <h3>Información técnica:</h3>
+                            <ul style="font-size: 12px; color: #666;">
+                                <li><strong>User Agent:</strong> ${formData.userAgent || 'Unknown'}</li>
+                                <li><strong>Platform:</strong> ${formData.platform || 'Unknown'}</li>
+                                <li><strong>Error completo:</strong> ${emailError.stack || emailError.message}</li>
+                            </ul>
+                            <hr>
+                            <h3>Datos del invitado:</h3>
+                            <ul>
+                                <li><strong>Nombre:</strong> ${formData.nombre}</li>
+                                <li><strong>Email:</strong> ${formData.email}</li>
+                                <li><strong>Asistencia:</strong> ${formData.asistencia}</li>
+                                <li><strong>Acompañante:</strong> ${formData.acompanante || 'N/A'}</li>
+                                <li><strong>Transporte:</strong> ${formData.transporte || 'N/A'}</li>
+                                <li><strong>Niños:</strong> ${formData.ninos || 'No'}</li>
+                                <li><strong>Alergias:</strong> ${formData.alergias || 'No'}</li>
+                                <li><strong>Menú:</strong> ${formData.menuVeggie || 'Tradicional'}</li>
+                                ${formData.mensaje ? `<li><strong>Mensaje:</strong> "${formData.mensaje}"</li>` : ''}
+                            </ul>
+                            <hr>
+                            <p style="color: #666; font-size: 12px;">
+                                💡 <strong>Recomendación:</strong> Considera contactar manualmente con ${formData.nombre}
+                                en ${formData.email} para confirmar que recibió la información de la boda.
+                            </p>
+                        </body>
+                        </html>
+                    `
+                })
+                console.log('✅ Email de warning a novios enviado')
+            } catch (backupEmailError) {
+                console.error('❌ Error crítico: No se pudo enviar ni email al invitado ni backup a novios')
+            }
+
             return {
                 statusCode: 200,
                 headers,

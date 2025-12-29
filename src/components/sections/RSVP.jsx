@@ -26,9 +26,19 @@ const RSVP = ({ data }) => {
         setSubmitError(false)
         setErrorDetails('')
 
+        // Generar ID único para este envío (para tracking)
+        const submissionId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+
         console.log('🚀 Iniciando envío de formulario...')
+        console.log('🆔 Submission ID:', submissionId)
         console.log('📱 User Agent:', navigator.userAgent)
         console.log('👤 Nombre:', formData.nombre)
+        console.log('🌐 Navigator:', {
+            platform: navigator.platform,
+            language: navigator.language,
+            cookieEnabled: navigator.cookieEnabled,
+            onLine: navigator.onLine
+        })
 
         try {
             // Intentar amb Netlify Function (la millor opció)
@@ -39,7 +49,12 @@ const RSVP = ({ data }) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify({
+                    ...formData,
+                    submissionId,
+                    userAgent: navigator.userAgent,
+                    platform: navigator.platform
+                })
             })
 
             const result = await response.json()
@@ -128,13 +143,16 @@ const RSVP = ({ data }) => {
             )
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
 
-            xhr.timeout = 8000 // 8 segons timeout
+            xhr.timeout = 15000 // 15 segundos timeout (aumentado para mejor compatibilidad)
 
             xhr.onload = function () {
                 console.log('📡 XHR onload - Status:', xhr.status)
-                if (xhr.status >= 200 && xhr.status < 400) {
+                // Google Forms devuelve 200, 302, o 303 como éxito
+                if (xhr.status === 0 || xhr.status >= 200 && xhr.status < 400) {
+                    console.log('✅ XHR exitoso')
                     resolve()
                 } else {
+                    console.error('❌ XHR status no válido:', xhr.status)
                     reject(new Error(`XHR status ${xhr.status}`))
                 }
             }
@@ -252,11 +270,13 @@ const RSVP = ({ data }) => {
                                         </p>
                                         <div className="bg-blue-100 border border-blue-300 rounded p-3">
                                             <p className="text-xs text-blue-900 font-medium">
-                                                ⚠️ <strong>IMPORTANTE:</strong> Si NO recibes el email en 2-3 minutos:
+                                                ⚠️ <strong>IMPORTANTE:</strong> Si NO recibes el email en 3-5 minutos:
                                             </p>
                                             <ul className="text-xs text-blue-800 mt-2 space-y-1 list-disc list-inside">
                                                 <li>Revisa tu carpeta de <strong>spam/correo no deseado</strong></li>
-                                                <li>Si no está, usa el <strong>botón de formulario alternativo</strong> más abajo para asegurarte</li>
+                                                <li>Verifica que escribiste bien tu email</li>
+                                                <li>Si no aparece, <strong>no te preocupes</strong> - tu confirmación YA está guardada</li>
+                                                <li>Si quieres estar 100% seguro/a, puedes usar el formulario directo de Google más abajo</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -275,6 +295,20 @@ const RSVP = ({ data }) => {
                             >
                                 Hacer otra confirmación
                             </Button>
+
+                            <div className="text-gray-400 text-sm">o</div>
+
+                            <Button
+                                variant="outline"
+                                onClick={() => window.open(GOOGLE_FORM_URL, '_blank')}
+                                className="w-full md:w-auto"
+                            >
+                                <ExternalLink className="w-5 h-5 mr-2 inline" />
+                                Verificar en Google Forms
+                            </Button>
+                            <p className="text-xs text-gray-500">
+                                Si quieres asegurarte al 100%, puedes revisar o reenviar tu confirmación en Google Forms
+                            </p>
                         </div>
                     </motion.div>
                 </div>
