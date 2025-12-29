@@ -41,7 +41,6 @@ const RSVP = ({ data }) => {
         })
 
         try {
-            // Intentar amb Netlify Function (la millor opció)
             console.log('🔄 Enviando via Netlify Function...')
 
             const response = await fetch('/.netlify/functions/submit-form', {
@@ -64,122 +63,21 @@ const RSVP = ({ data }) => {
             if (response.ok && result.success) {
                 console.log('✅ ¡Formulario enviado correctamente!')
                 setIsSubmitted(true)
-                return // Sortir aquí, tot ha anat bé!
             } else {
-                // Si la function falla, intentem el backup
-                console.warn('⚠️ Netlify Function falló, intentando backup...')
-                throw new Error(result.error || 'Error desconocido')
+                // Error del servidor
+                console.error('❌ Netlify Function respondió con error:', result.error)
+                setSubmitError(true)
+                setErrorDetails(result.error || 'No se pudo procesar tu confirmación. Por favor, intenta de nuevo o usa el formulario alternativo de Google.')
             }
 
-        } catch (netlifyError) {
-            console.error('❌ Error con Netlify Function:', netlifyError.message)
-
-            // BACKUP 1: Intentar enviar directament amb fetch
-            try {
-                console.log('🔄 Backup 1: Enviando directamente a Google Forms...')
-
-                const params = new URLSearchParams()
-                params.append("entry.514764643", formData.nombre || "")
-                params.append("entry.1325579506", formData.email || "")
-                params.append("entry.1842802559", formData.asistencia || "")
-                params.append("entry.18465505", formData.acompanante || "")
-                params.append("entry.954168348", formData.transporte || "")
-                params.append("entry.2077565567", formData.alergias || "")
-                params.append("entry.121257817", formData.menuVeggie || "")
-                params.append("entry.1055691836", formData.ninos || "")
-                params.append("entry.2028635582", formData.mensaje || "")
-
-                await fetch(
-                    'https://docs.google.com/forms/d/e/1FAIpQLScgGg5y7jcQ_i7i9IRRWw9VSudOShweyCgOL64z3G862CrMtw/formResponse',
-                    {
-                        method: 'POST',
-                        mode: 'no-cors', // Necessari però no podem verificar resposta
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: params.toString()
-                    }
-                )
-
-                console.log('✅ Backup 1 completado (no-cors, asumimos éxito)')
-                setIsSubmitted(true)
-                return
-
-            } catch (fetchError) {
-                console.error('❌ Backup 1 falló:', fetchError.message)
-
-                // BACKUP 2: Intentar amb XMLHttpRequest (millor compatibilitat Android)
-                try {
-                    console.log('🔄 Backup 2: Intentando con XMLHttpRequest...')
-
-                    await sendWithXHR(formData)
-
-                    console.log('✅ Backup 2 exitoso!')
-                    setIsSubmitted(true)
-                    return
-
-                } catch (xhrError) {
-                    console.error('❌ Backup 2 también falló:', xhrError.message)
-
-                    // Tot ha fallat, mostrar error amb opció d'obrir el form directe
-                    setSubmitError(true)
-                    setErrorDetails('No se pudo conectar con el servidor. Por favor, usa el formulario alternativo.')
-                }
-            }
+        } catch (error) {
+            // Error de red o timeout
+            console.error('❌ Error al conectar con el servidor:', error.message)
+            setSubmitError(true)
+            setErrorDetails('No se pudo conectar con el servidor. Por favor, verifica tu conexión a internet e intenta de nuevo, o usa el formulario alternativo de Google.')
         } finally {
             setIsSubmitting(false)
         }
-    }
-
-    // Funció auxiliar XMLHttpRequest per millor compatibilitat
-    const sendWithXHR = (formData) => {
-        return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest()
-
-            xhr.open(
-                'POST',
-                'https://docs.google.com/forms/d/e/1FAIpQLScgGg5y7jcQ_i7i9IRRWw9VSudOShweyCgOL64z3G862CrMtw/formResponse',
-                true
-            )
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-
-            xhr.timeout = 15000 // 15 segundos timeout (aumentado para mejor compatibilidad)
-
-            xhr.onload = function () {
-                console.log('📡 XHR onload - Status:', xhr.status)
-                // Google Forms devuelve 200, 302, o 303 como éxito
-                if (xhr.status === 0 || xhr.status >= 200 && xhr.status < 400) {
-                    console.log('✅ XHR exitoso')
-                    resolve()
-                } else {
-                    console.error('❌ XHR status no válido:', xhr.status)
-                    reject(new Error(`XHR status ${xhr.status}`))
-                }
-            }
-
-            xhr.onerror = function () {
-                console.error('❌ XHR onerror')
-                reject(new Error('XHR network error'))
-            }
-
-            xhr.ontimeout = function () {
-                console.error('⏱️ XHR timeout')
-                reject(new Error('XHR timeout'))
-            }
-
-            const params = new URLSearchParams()
-            params.append("entry.514764643", formData.nombre || "")
-            params.append("entry.1325579506", formData.email || "")
-            params.append("entry.1842802559", formData.asistencia || "")
-            params.append("entry.18465505", formData.acompanante || "")
-            params.append("entry.954168348", formData.transporte || "")
-            params.append("entry.2077565567", formData.alergias || "")
-            params.append("entry.121257817", formData.menuVeggie || "")
-            params.append("entry.1055691836", formData.ninos || "")
-            params.append("entry.2028635582", formData.mensaje || "")
-
-            xhr.send(params.toString())
-        })
     }
 
     // Pantalla d'ERROR amb opció de Google Form directe
@@ -193,23 +91,31 @@ const RSVP = ({ data }) => {
                         transition={{ duration: 0.5 }}
                     >
                         <AlertCircle className="w-24 h-24 text-orange-500 mx-auto mb-8" />
-                        <h2 className="text-5xl font-light mb-6">Ups, algo no ha funcionado</h2>
+                        <h2 className="text-5xl font-light mb-6">No pudimos enviar tu confirmación</h2>
                         <p className="text-xl text-gray-600 mb-4">
-                            {errorDetails || 'Parece que hay un problema técnico con el formulario.'}
+                            {errorDetails || 'Hubo un problema al procesar tu confirmación.'}
                         </p>
                         <p className="text-lg text-gray-500 mb-8">
-                            No te preocupes, puedes confirmar tu asistencia directamente:
+                            No te preocupes, tienes dos opciones:
                         </p>
 
                         <div className="space-y-4">
-                            <Button
-                                variant="primary"
-                                onClick={() => window.open(GOOGLE_FORM_URL, '_blank')}
-                                className="w-full md:w-auto"
-                            >
-                                <ExternalLink className="w-5 h-5 mr-2 inline" />
-                                Abrir formulario de Google
-                            </Button>
+                            <div className="bg-blue-50 border-2 border-blue-300 p-4 rounded mb-4">
+                                <p className="text-sm text-blue-900 font-medium mb-2">
+                                    ✅ Opción recomendada: Formulario de Google
+                                </p>
+                                <p className="text-xs text-blue-800 mb-3">
+                                    Es 100% fiable y tus datos se guardarán directamente.
+                                </p>
+                                <Button
+                                    variant="primary"
+                                    onClick={() => window.open(GOOGLE_FORM_URL, '_blank')}
+                                    className="w-full"
+                                >
+                                    <ExternalLink className="w-5 h-5 mr-2 inline" />
+                                    Abrir formulario de Google
+                                </Button>
+                            </div>
 
                             <div className="text-gray-400 text-sm">o</div>
 
@@ -221,12 +127,12 @@ const RSVP = ({ data }) => {
                                 }}
                                 className="w-full md:w-auto"
                             >
-                                Volver a intentar aquí
+                                🔄 Volver a intentar aquí
                             </Button>
                         </div>
 
                         <p className="text-sm text-gray-500 mt-8">
-                            Si el problema persiste, escríbenos a{' '}
+                            Si tienes dudas, escríbenos a{' '}
                             <a
                                 href={`mailto:${data?.contact.email}`}
                                 className="underline hover:text-black transition-colors"
