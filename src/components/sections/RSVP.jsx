@@ -18,7 +18,6 @@ const RSVP = ({ data }) => {
     const [errorDetails, setErrorDetails] = useState('')
     const { register, handleSubmit, formState: { errors } } = useForm()
 
-    // URL del Google Form per fallback directe
     const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScgGg5y7jcQ_i7i9IRRWw9VSudOShweyCgOL64z3G862CrMtw/viewform'
 
     const onSubmit = async (formData) => {
@@ -26,14 +25,13 @@ const RSVP = ({ data }) => {
         setSubmitError(false)
         setErrorDetails('')
 
-        // Generar ID único para este envío (para tracking)
         const submissionId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
 
-        console.log('🚀 Iniciando envío de formulario...')
-        console.log('🆔 Submission ID:', submissionId)
-        console.log('📱 User Agent:', navigator.userAgent)
-        console.log('👤 Nombre:', formData.nombre)
-        console.log('🌐 Navigator:', {
+        console.log('Form submission started')
+        console.log('Submission ID:', submissionId)
+        console.log('User Agent:', navigator.userAgent)
+        console.log('Name:', formData.nombre)
+        console.log('Navigator info:', {
             platform: navigator.platform,
             language: navigator.language,
             cookieEnabled: navigator.cookieEnabled,
@@ -41,7 +39,7 @@ const RSVP = ({ data }) => {
         })
 
         try {
-            console.log('🔄 Enviando via Netlify Function...')
+            console.log('Sending via Netlify Function...')
 
             const response = await fetch('/.netlify/functions/submit-form', {
                 method: 'POST',
@@ -58,21 +56,19 @@ const RSVP = ({ data }) => {
 
             const result = await response.json()
 
-            console.log('📥 Respuesta de Netlify Function:', result)
+            console.log('Netlify Function response:', result)
 
             if (response.ok && result.success) {
-                console.log('✅ ¡Formulario enviado correctamente!')
+                console.log('Form submitted successfully')
                 setIsSubmitted(true)
             } else {
-                // Error del servidor
-                console.error('❌ Netlify Function respondió con error:', result.error)
+                console.error('Netlify Function error:', result.error)
                 setSubmitError(true)
                 setErrorDetails(result.error || 'No se pudo procesar tu confirmación. Por favor, intenta de nuevo o usa el formulario alternativo de Google.')
             }
 
         } catch (error) {
-            // Error de red o timeout
-            console.error('❌ Error al conectar con el servidor:', error.message)
+            console.error('Network error:', error.message)
             setSubmitError(true)
             setErrorDetails('No se pudo conectar con el servidor. Por favor, verifica tu conexión a internet e intenta de nuevo, o usa el formulario alternativo de Google.')
         } finally {
@@ -80,7 +76,7 @@ const RSVP = ({ data }) => {
         }
     }
 
-    // Pantalla d'ERROR amb opció de Google Form directe
+    // Error screen
     if (submitError) {
         return (
             <section className="py-32 bg-gray-50">
@@ -127,7 +123,7 @@ const RSVP = ({ data }) => {
                                 }}
                                 className="w-full md:w-auto"
                             >
-                                🔄 Volver a intentar aquí
+                                Volver a intentar aquí
                             </Button>
                         </div>
 
@@ -146,7 +142,7 @@ const RSVP = ({ data }) => {
         )
     }
 
-    // Pantalla d'ÈXIT
+    // Success screen
     if (isSubmitted) {
         return (
             <section className="py-32 bg-gray-50">
@@ -162,14 +158,13 @@ const RSVP = ({ data }) => {
                             Hemos recibido tu confirmación correctamente.
                         </p>
 
-                        {/* INSTRUCCIONES CLARAS SOBRE EL EMAIL */}
                         <Card className="bg-blue-50 border-2 border-blue-300 mb-8">
                             <div className="space-y-4">
                                 <div className="flex items-start justify-center space-x-3">
                                     <Mail className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
                                     <div className="text-left">
                                         <p className="text-lg text-blue-900 font-medium mb-2">
-                                            📧 Revisa tu correo electrónico
+                                            Revisa tu correo electrónico
                                         </p>
                                         <p className="text-sm text-blue-800 mb-3">
                                             Te hemos enviado un email con la confirmación y todos los detalles de tu respuesta.
@@ -222,7 +217,7 @@ const RSVP = ({ data }) => {
         )
     }
 
-    // FORMULARI PRINCIPAL
+    // Main form
     return (
         <section className="py-32 bg-gray-50" ref={ref}>
             <div className="max-w-4xl mx-auto px-6">
@@ -240,7 +235,6 @@ const RSVP = ({ data }) => {
                     </div>
                 </motion.div>
 
-                {/* FORMULARIO */}
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     animate={inView ? { opacity: 1, y: 0 } : {}}
