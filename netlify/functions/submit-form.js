@@ -1,6 +1,10 @@
 // netlify/functions/submit-form.js
+import { Resend } from 'resend'
+import { Heart, Send, CheckCircle, AlertCircle, ExternalLink, Mail } from 'lucide-react'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
+
 export async function handler(event, context) {
-    // Headers CORS per permetre peticions des del frontend
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
@@ -8,16 +12,10 @@ export async function handler(event, context) {
         'Content-Type': 'application/json'
     }
 
-    // Handle preflight
     if (event.httpMethod === 'OPTIONS') {
-        return {
-            statusCode: 200,
-            headers,
-            body: ''
-        }
+        return { statusCode: 200, headers, body: '' }
     }
 
-    // Només acceptem POST
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
@@ -27,13 +25,14 @@ export async function handler(event, context) {
     }
 
     try {
-        // Parsejar el body
         const formData = JSON.parse(event.body)
 
         console.log('📥 Formulario recibido de:', formData.nombre || 'Sin nombre')
-        console.log('📱 Headers:', event.headers['user-agent'])
+        console.log('📧 Email destinatario:', formData.email)
 
-        // Construir URLSearchParams per Google Forms
+        // ============================================
+        // PASO 1: ENVIAR A GOOGLE FORMS
+        // ============================================
         const params = new URLSearchParams()
         params.append("entry.514764643", formData.nombre || "")
         params.append("entry.1325579506", formData.email || "")
@@ -47,65 +46,218 @@ export async function handler(event, context) {
 
         console.log('📤 Enviando a Google Forms...')
 
-        // Fer la petició a Google Forms amb timeout
         const controller = new AbortController()
-        const timeoutId = setTimeout(() => controller.abort(), 8000) // 8 segons timeout
+        const timeoutId = setTimeout(() => controller.abort(), 8000)
 
-        const response = await fetch(
+        const googleResponse = await fetch(
             'https://docs.google.com/forms/d/e/1FAIpQLScgGg5y7jcQ_i7i9IRRWw9VSudOShweyCgOL64z3G862CrMtw/formResponse',
             {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: params.toString(),
                 signal: controller.signal
             }
         )
 
         clearTimeout(timeoutId)
+        console.log('✅ Google Forms respuesta:', googleResponse.status, googleResponse.statusText)
 
-        console.log('✅ Respuesta de Google:', response.status, response.statusText)
+        // ============================================
+        // VERIFICAR QUE GOOGLE FORMS HA FUNCIONAT
+        // ============================================
+        const googleSuccess = googleResponse.ok || googleResponse.status === 302 || googleResponse.status === 303
 
-        // Google Forms normalment retorna 200 OK o 302 redirect
-        if (response.ok || response.status === 302 || response.status === 303) {
+        if (!googleSuccess) {
+            console.error('❌ Google Forms falló, NO se enviará email')
+            throw new Error(`Google Forms respondió con status ${googleResponse.status}`)
+        }
+
+        console.log('✅ Google Forms OK, procediendo a enviar email...')
+
+        // ============================================
+        // PASO 2: ENVIAR EMAIL DE CONFIRMACIÓN (SOLO SI GOOGLE FORMS OK)
+        // ============================================
+
+        // Formatear datos para el email
+        const asistenciaTexto = formData.asistencia === 'Si'
+            ? '✅ ¡Sí, estaré ahí! 🎉'
+            : '❌ No podré asistir 😢'
+
+        const acompananteTexto = formData.acompanante
+            ? formData.acompanante
+            : 'No especificado'
+
+        const transporteTexto = formData.transporte === 'Si'
+            ? '🚌 Sí, autobús desde Caldes de Montbui'
+            : formData.transporte === 'No'
+                ? '🚗 No necesito transporte'
+                : 'No especificado'
+
+        const ninosTexto = formData.ninos && formData.ninos !== 'No' && formData.ninos !== ''
+            ? `👶 ${formData.ninos} niño/s`
+            : '👤 Sin niños'
+
+        const alergiasTexto = formData.alergias === 'Si'
+            ? '⚠️ Sí (ver mensaje)'
+            : '✅ No'
+
+        const menuVeggieTexto = formData.menuVeggie === 'Si'
+            ? '🌱 Menú vegano'
+            : '🍖 Menú tradicional'
+
+        try {
+            const emailResult = await resend.emails.send({
+                from: 'Boda Raquel y Daniel <onboarding@resend.dev>', // Temporal, canviar després
+                to: formData.email,
+                subject: '✅ Confirmación recibida - Boda Raquel y Daniel',
+                html: `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset="utf-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    </head>
+                    <body style="margin: 0; padding: 0; font-family: 'Arial', sans-serif; background-color: #f5f5f5;">
+                        <div style="max-width: 600px; margin: 40px auto; background-color: white; border: 2px solid #1a1a1a;">
+                            
+                            <!-- Header -->
+                            <div style="background-color: #1a1a1a; color: white; padding: 40px 30px; text-align: center;">
+                                <h1 style="margin: 0; font-size: 32px; font-weight: 300;">
+                                    ¡Gracias, ${formData.nombre}!
+                                </h1>
+                                <p style="margin: 10px 0 0 0; font-size: 18px; opacity: 0.9;">
+                                    Confirmación recibida correctamente ✅
+                                </p>
+                            </div>
+
+                            <!-- Body -->
+                            <div style="padding: 40px 30px;">
+                                <p style="font-size: 16px; line-height: 1.6; color: #333; margin: 0 0 20px 0;">
+                                    Hemos recibido tu confirmación de asistencia para nuestra boda. 
+                                    Aquí tienes un resumen de tu respuesta:
+                                </p>
+
+                                <!-- Datos confirmación -->
+                                <div style="background-color: #f9f9f9; border: 2px solid #e5e5e5; padding: 25px; margin: 30px 0;">
+                                    <div style="margin-bottom: 15px;">
+                                        <strong style="color: #1a1a1a;">Asistencia:</strong><br>
+                                        <span style="font-size: 18px;">${asistenciaTexto}</span>
+                                    </div>
+                                    
+                                    <div style="margin-bottom: 15px;">
+                                        <strong style="color: #1a1a1a;">Acompañante:</strong><br>
+                                        <span>${acompananteTexto}</span>
+                                    </div>
+                                    
+                                    <div style="margin-bottom: 15px;">
+                                        <strong style="color: #1a1a1a;">Transporte:</strong><br>
+                                        <span>${transporteTexto}</span>
+                                    </div>
+                                    
+                                    <div style="margin-bottom: 15px;">
+                                        <strong style="color: #1a1a1a;">Niños (2-12 años):</strong><br>
+                                        <span>${ninosTexto}</span>
+                                    </div>
+                                    
+                                    <div style="margin-bottom: 15px;">
+                                        <strong style="color: #1a1a1a;">Alergias/Intolerancias:</strong><br>
+                                        <span>${alergiasTexto}</span>
+                                    </div>
+                                    
+                                    <div style="margin-bottom: ${formData.mensaje ? '15px' : '0'};">
+                                        <strong style="color: #1a1a1a;">Menú:</strong><br>
+                                        <span>${menuVeggieTexto}</span>
+                                    </div>
+                                    
+                                    ${formData.mensaje ? `
+                                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd;">
+                                        <strong style="color: #1a1a1a;">Tu mensaje:</strong><br>
+                                        <span style="font-style: italic; color: #555;">"${formData.mensaje}"</span>
+                                    </div>
+                                    ` : ''}
+                                </div>
+
+                                ${formData.asistencia === 'Si' ? `
+                                <div style="background-color: #f0f9ff; border-left: 4px solid #3b82f6; padding: 20px; margin: 30px 0;">
+                                    <p style="margin: 0; font-size: 14px; color: #1e40af; line-height: 1.6;">
+                                        <strong>📅 Fecha:</strong> 17 de Julio de 2026<br>
+                                        <strong>⏰ Ceremonia:</strong> 17:30h<br>
+                                        <strong>🍽️ Banquete:</strong> 19:30h<br><br>
+                                        Más adelante te enviaremos todos los detalles.
+                                    </p>
+                                </div>
+                                ` : ''}
+
+                                <p style="font-size: 16px; line-height: 1.6; color: #333; margin: 30px 0 10px 0;">
+                                    ¡Nos vemos pronto! 💕
+                                </p>
+                                
+                                <p style="font-size: 16px; line-height: 1.6; color: #333; margin: 0;">
+                                    <strong>Raquel y Daniel</strong> (y Cata 🐕)
+                                </p>
+                            </div>
+
+                            <!-- Footer -->
+                            <div style="background-color: #f9f9f9; padding: 25px 30px; border-top: 2px solid #e5e5e5;">
+                                <p style="margin: 0; font-size: 13px; color: #666; line-height: 1.6;">
+                                    Si tienes alguna pregunta, escríbenos a 
+                                    <a href="mailto:bodaenmodocata@gmail.com" style="color: #1a1a1a; text-decoration: none;">
+                                        bodaenmodocata@gmail.com
+                                    </a>
+                                </p>
+                                <p style="margin: 15px 0 0 0; font-size: 12px; color: #999;">
+                                    Si no has sido tú quien ha rellenado este formulario, por favor ignora este email.
+                                </p>
+                            </div>
+
+                        </div>
+                    </body>
+                    </html>
+                `
+            })
+
+            console.log('✅ Email enviado correctamente:', emailResult.id)
+
+        } catch (emailError) {
+            console.error('⚠️ Error enviando email:', emailError)
+            // Email falla pero Google Forms funcionó, retornem èxit igualment
+            // però informem que l'email ha fallat
             return {
                 statusCode: 200,
                 headers,
                 body: JSON.stringify({
                     success: true,
-                    message: 'Formulario enviado correctamente a Google Sheets',
+                    emailSent: false,
+                    warning: 'Formulario guardado pero email no enviado',
                     timestamp: new Date().toISOString()
-                })
-            }
-        } else {
-            console.error('⚠️ Google Forms respuesta inesperada:', response.status)
-
-            // Retornar error però amb info
-            return {
-                statusCode: 500,
-                headers,
-                body: JSON.stringify({
-                    success: false,
-                    error: 'Error al enviar a Google Forms',
-                    details: `Status ${response.status}`,
-                    googleStatus: response.status
                 })
             }
         }
 
-    } catch (error) {
-        console.error('❌ Error en la función:', error.message)
+        // ============================================
+        // RESPOSTA D'ÈXIT
+        // ============================================
+        return {
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({
+                success: true,
+                emailSent: true,
+                message: 'Formulario enviado y email de confirmación enviado',
+                timestamp: new Date().toISOString()
+            })
+        }
 
-        // Diferenciar tipus d'error
+    } catch (error) {
+        console.error('❌ Error general:', error.message)
+
         if (error.name === 'AbortError') {
             return {
                 statusCode: 504,
                 headers,
                 body: JSON.stringify({
                     success: false,
-                    error: 'Timeout al conectar con Google Forms',
-                    details: 'La petición tardó demasiado'
+                    error: 'Timeout al conectar con Google Forms'
                 })
             }
         }
@@ -115,8 +267,7 @@ export async function handler(event, context) {
             headers,
             body: JSON.stringify({
                 success: false,
-                error: 'Error interno del servidor',
-                details: error.message
+                error: error.message
             })
         }
     }

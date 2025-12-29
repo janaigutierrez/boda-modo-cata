@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { useForm } from 'react-hook-form'
-import { Heart, Send, CheckCircle, AlertCircle, ExternalLink } from 'lucide-react'
+import { Heart, Send, CheckCircle, AlertCircle, ExternalLink, Mail } from 'lucide-react'
 import { useState } from 'react'
 import Button from '../ui/Button'
 import Card from '../ui/Card'
@@ -234,13 +234,41 @@ const RSVP = ({ data }) => {
                     >
                         <CheckCircle className="w-24 h-24 text-green-500 mx-auto mb-8" />
                         <h2 className="text-5xl font-light mb-6">¡Muchas gracias!</h2>
-                        <p className="text-xl text-gray-600 mb-4">
+                        <p className="text-xl text-gray-600 mb-6">
                             Hemos recibido tu confirmación correctamente.
                         </p>
+
+                        {/* INSTRUCCIONES CLARAS SOBRE EL EMAIL */}
+                        <Card className="bg-blue-50 border-2 border-blue-300 mb-8">
+                            <div className="space-y-4">
+                                <div className="flex items-start justify-center space-x-3">
+                                    <Mail className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+                                    <div className="text-left">
+                                        <p className="text-lg text-blue-900 font-medium mb-2">
+                                            📧 Revisa tu correo electrónico
+                                        </p>
+                                        <p className="text-sm text-blue-800 mb-3">
+                                            Te hemos enviado un email con la confirmación y todos los detalles de tu respuesta.
+                                        </p>
+                                        <div className="bg-blue-100 border border-blue-300 rounded p-3">
+                                            <p className="text-xs text-blue-900 font-medium">
+                                                ⚠️ <strong>IMPORTANTE:</strong> Si NO recibes el email en 2-3 minutos:
+                                            </p>
+                                            <ul className="text-xs text-blue-800 mt-2 space-y-1 list-disc list-inside">
+                                                <li>Revisa tu carpeta de <strong>spam/correo no deseado</strong></li>
+                                                <li>Si no está, usa el <strong>botón de formulario alternativo</strong> más abajo para asegurarte</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </Card>
+
                         <p className="text-lg text-gray-500 mb-8">
-                            Más adelante te enviaremos todos los detalles por email.
+                            Más adelante te enviaremos todos los detalles de la boda.
                         </p>
-                        <div className="mt-8">
+
+                        <div className="space-y-4">
                             <Button
                                 variant="secondary"
                                 onClick={() => setIsSubmitted(false)}
