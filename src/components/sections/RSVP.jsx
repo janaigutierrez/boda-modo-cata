@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { Heart, ExternalLink, Mail, CheckCircle, Calendar, Clock, UtensilsCrossed, MapPin, FileText } from 'lucide-react'
+import { Heart, ExternalLink, Calendar, Clock, UtensilsCrossed, MapPin, FileText, Gift } from 'lucide-react'
 import Button from '../ui/Button'
 import Card from '../ui/Card'
 
@@ -49,7 +49,7 @@ const RSVP = ({ data }) => {
 
                             {/* INFO DETALLES DE LA BODA */}
                             <div className="bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-200 rounded-2xl p-8">
-                                <div className="grid md:grid-cols-2 gap-6 text-left">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div className="flex items-start space-x-3">
                                         <Calendar className="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" />
                                         <div>
@@ -71,13 +71,7 @@ const RSVP = ({ data }) => {
                                             <p className="text-lg font-medium text-black">19:30h</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-start space-x-3">
-                                        <MapPin className="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="text-sm text-gray-500 mb-1">Lugar</p>
-                                            <p className="text-lg font-medium text-black">Por confirmar</p>
-                                        </div>
-                                    </div>
+
                                 </div>
                             </div>
 
