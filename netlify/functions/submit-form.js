@@ -1,4 +1,3 @@
-// netlify/functions/submit-form.js
 import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -26,12 +25,14 @@ export async function handler(event, context) {
     try {
         const formData = JSON.parse(event.body)
 
-        console.log('📥 Formulario recibido de:', formData.nombre || 'Sin nombre')
-        console.log('📧 Email destinatario:', formData.email)
+        console.log('Form received from:', formData.nombre || 'No name')
+        console.log('Email:', formData.email)
+        console.log('Submission ID:', formData.submissionId || 'No ID')
+        console.log('User Agent:', formData.userAgent || 'Unknown')
+        console.log('Platform:', formData.platform || 'Unknown')
+        console.log('Server Time:', new Date().toISOString())
 
-        // ============================================
-        // PASO 1: ENVIAR A GOOGLE FORMS
-        // ============================================
+        // Step 1: Send to Google Forms
         const params = new URLSearchParams()
         params.append("entry.514764643", formData.nombre || "")
         params.append("entry.1325579506", formData.email || "")
@@ -43,10 +44,10 @@ export async function handler(event, context) {
         params.append("entry.1055691836", formData.ninos || "")
         params.append("entry.2028635582", formData.mensaje || "")
 
-        console.log('📤 Enviando a Google Forms...')
+        console.log('Sending to Google Forms...')
 
         const controller = new AbortController()
-        const timeoutId = setTimeout(() => controller.abort(), 8000)
+        const timeoutId = setTimeout(() => controller.abort(), 15000)
 
         const googleResponse = await fetch(
             'https://docs.google.com/forms/d/e/1FAIpQLScgGg5y7jcQ_i7i9IRRWw9VSudOShweyCgOL64z3G862CrMtw/formResponse',
@@ -59,25 +60,19 @@ export async function handler(event, context) {
         )
 
         clearTimeout(timeoutId)
-        console.log('✅ Google Forms respuesta:', googleResponse.status, googleResponse.statusText)
+        console.log('Google Forms response:', googleResponse.status, googleResponse.statusText)
 
-        // ============================================
-        // VERIFICAR QUE GOOGLE FORMS HA FUNCIONAT
-        // ============================================
+        // Verify Google Forms success
         const googleSuccess = googleResponse.ok || googleResponse.status === 302 || googleResponse.status === 303
 
         if (!googleSuccess) {
-            console.error('❌ Google Forms falló, NO se enviará email')
-            throw new Error(`Google Forms respondió con status ${googleResponse.status}`)
+            console.error('Google Forms failed, email will not be sent')
+            throw new Error(`Google Forms responded with status ${googleResponse.status}`)
         }
 
-        console.log('✅ Google Forms OK, procediendo a enviar email...')
+        console.log('Google Forms OK, proceeding to send email...')
 
-        // ============================================
-        // PASO 2: ENVIAR EMAIL DE CONFIRMACIÓN (SOLO SI GOOGLE FORMS OK)
-        // ============================================
-
-        // Formatear datos para el email
+        // Step 2: Send confirmation email (only if Google Forms succeeded)
         const asistenciaTexto = formData.asistencia === 'Si'
             ? '✅ ¡Sí, estaré ahí! 🎉'
             : '❌ No podré asistir 😢'
@@ -106,7 +101,7 @@ export async function handler(event, context) {
 
         try {
             const emailResult = await resend.emails.send({
-                from: 'Boda Raquel y Daniel <onboarding@resend.dev>', // Temporal, canviar després
+                from: 'Boda Raquel y Daniel <onboarding@resend.dev>',
                 to: formData.email,
                 subject: '✅ Confirmación recibida - Boda Raquel y Daniel',
                 html: `
@@ -215,12 +210,115 @@ export async function handler(event, context) {
                 `
             })
 
-            console.log('✅ Email enviado correctamente:', emailResult.id)
+            console.log('Email sent successfully:', emailResult.id)
+
+            // Step 3: Send backup notification to couple
+            try {
+                await resend.emails.send({
+                    from: 'Sistema RSVP <onboarding@resend.dev>',
+                    to: 'bodaenmodocata@gmail.com',
+                    subject: `✅ Nueva confirmación: ${formData.nombre}`,
+                    html: `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <meta charset="utf-8">
+                        </head>
+                        <body style="font-family: Arial, sans-serif; padding: 20px;">
+                            <h2>✅ Nueva confirmación recibida</h2>
+                            <p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
+                            <p><strong>Submission ID:</strong> ${formData.submissionId || 'N/A'}</p>
+                            <p><strong>Estado email al invitado:</strong> Enviado correctamente ✅</p>
+                            <hr>
+                            <h3>Información técnica:</h3>
+                            <ul style="font-size: 12px; color: #666;">
+                                <li><strong>User Agent:</strong> ${formData.userAgent || 'Unknown'}</li>
+                                <li><strong>Platform:</strong> ${formData.platform || 'Unknown'}</li>
+                            </ul>
+                            <hr>
+                            <h3>Datos del invitado:</h3>
+                            <ul>
+                                <li><strong>Nombre:</strong> ${formData.nombre}</li>
+                                <li><strong>Email:</strong> ${formData.email}</li>
+                                <li><strong>Asistencia:</strong> ${asistenciaTexto}</li>
+                                <li><strong>Acompañante:</strong> ${acompananteTexto}</li>
+                                <li><strong>Transporte:</strong> ${transporteTexto}</li>
+                                <li><strong>Niños:</strong> ${ninosTexto}</li>
+                                <li><strong>Alergias:</strong> ${alergiasTexto}</li>
+                                <li><strong>Menú:</strong> ${menuVeggieTexto}</li>
+                                ${formData.mensaje ? `<li><strong>Mensaje:</strong> "${formData.mensaje}"</li>` : ''}
+                            </ul>
+                            <hr>
+                            <p style="color: #666; font-size: 12px;">
+                                Este email se envía automáticamente para asegurar que tengáis registro de todas las confirmaciones.
+                            </p>
+                        </body>
+                        </html>
+                    `
+                })
+                console.log('Backup email to couple sent')
+            } catch (backupEmailError) {
+                console.error('Error sending backup email to couple:', backupEmailError)
+            }
 
         } catch (emailError) {
-            console.error('⚠️ Error enviando email:', emailError)
-            // Email falla pero Google Forms funcionó, retornem èxit igualment
-            // però informem que l'email ha fallat
+            console.error('Error sending email:', emailError)
+
+            // Guest email failed but Google Forms succeeded - send warning to couple
+            try {
+                await resend.emails.send({
+                    from: 'Sistema RSVP <onboarding@resend.dev>',
+                    to: 'bodaenmodocata@gmail.com',
+                    subject: `⚠️ Confirmación recibida (email falló): ${formData.nombre}`,
+                    html: `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <meta charset="utf-8">
+                        </head>
+                        <body style="font-family: Arial, sans-serif; padding: 20px;">
+                            <h2>⚠️ Nueva confirmación recibida (con problema de email)</h2>
+                            <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0;">
+                                <p><strong>⚠️ ATENCIÓN:</strong> El formulario se guardó correctamente en Google Forms,
+                                pero el email de confirmación al invitado NO se pudo enviar.</p>
+                                <p><strong>Error:</strong> ${emailError.message}</p>
+                            </div>
+                            <p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
+                            <p><strong>Submission ID:</strong> ${formData.submissionId || 'N/A'}</p>
+                            <hr>
+                            <h3>Información técnica:</h3>
+                            <ul style="font-size: 12px; color: #666;">
+                                <li><strong>User Agent:</strong> ${formData.userAgent || 'Unknown'}</li>
+                                <li><strong>Platform:</strong> ${formData.platform || 'Unknown'}</li>
+                                <li><strong>Error completo:</strong> ${emailError.stack || emailError.message}</li>
+                            </ul>
+                            <hr>
+                            <h3>Datos del invitado:</h3>
+                            <ul>
+                                <li><strong>Nombre:</strong> ${formData.nombre}</li>
+                                <li><strong>Email:</strong> ${formData.email}</li>
+                                <li><strong>Asistencia:</strong> ${formData.asistencia}</li>
+                                <li><strong>Acompañante:</strong> ${formData.acompanante || 'N/A'}</li>
+                                <li><strong>Transporte:</strong> ${formData.transporte || 'N/A'}</li>
+                                <li><strong>Niños:</strong> ${formData.ninos || 'No'}</li>
+                                <li><strong>Alergias:</strong> ${formData.alergias || 'No'}</li>
+                                <li><strong>Menú:</strong> ${formData.menuVeggie || 'Tradicional'}</li>
+                                ${formData.mensaje ? `<li><strong>Mensaje:</strong> "${formData.mensaje}"</li>` : ''}
+                            </ul>
+                            <hr>
+                            <p style="color: #666; font-size: 12px;">
+                                💡 <strong>Recomendación:</strong> Considera contactar manualmente con ${formData.nombre}
+                                en ${formData.email} para confirmar que recibió la información de la boda.
+                            </p>
+                        </body>
+                        </html>
+                    `
+                })
+                console.log('Warning email to couple sent')
+            } catch (backupEmailError) {
+                console.error('Critical error: Could not send email to guest or couple')
+            }
+
             return {
                 statusCode: 200,
                 headers,
@@ -233,9 +331,7 @@ export async function handler(event, context) {
             }
         }
 
-        // ============================================
-        // RESPOSTA D'ÈXIT
-        // ============================================
+        // Success response
         return {
             statusCode: 200,
             headers,
@@ -248,7 +344,7 @@ export async function handler(event, context) {
         }
 
     } catch (error) {
-        console.error('❌ Error general:', error.message)
+        console.error('General error:', error.message)
 
         if (error.name === 'AbortError') {
             return {
