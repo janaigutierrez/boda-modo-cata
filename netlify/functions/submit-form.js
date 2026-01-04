@@ -1,6 +1,5 @@
 // netlify/functions/submit-form.js
 import { Resend } from 'resend'
-import { Heart, Send, CheckCircle, AlertCircle, ExternalLink, Mail } from 'lucide-react'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
