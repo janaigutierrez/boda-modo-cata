@@ -31,9 +31,9 @@ export const weddingData = {
             departure: "Caldes de Montbui",
             departureAddress: "Estació d'autobusos de Caldes de Montbui",
             departureTime: "17h",
-            returnTime: "04h",
+            returnTime: "Fin de fiesta",
             description: "Confirma tu necesidad de transporte en el formulario",
-            mapUrl: "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d636.573740138656!2d2.1655604123970673!3d41.62931163526736!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sca!2ses!4v1762282842227!5m2!1sca!2ses"
+            mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1386.35788486903!2d2.170341282499221!3d41.625117925619136!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a4c1c7ed2b80b7%3A0x26553dd7e5403eb7!2sCaprabo!5e1!3m2!1sca!2ses!4v1781128291047!5m2!1sca!2ses"
         }
     },
     contact: {
